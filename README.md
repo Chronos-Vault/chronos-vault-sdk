@@ -551,7 +551,7 @@ npm run build
 ### Issue Reporting
 - **Bug Reports**: [GitHub Issues](https://github.com/Chronos-Vault/chronos-vault-sdk/issues)
 - **Feature Requests**: [GitHub Discussions](https://github.com/Chronos-Vault/chronos-vault-sdk/discussions)
-- **Security Issues**: security@chronosvault.org
+- **Security Issues**: chronosvault@chronosvault.org
 
 ### Community Support
 - **Discord**: [discord.gg/chronosvault](https://discord.gg/chronosvault)
