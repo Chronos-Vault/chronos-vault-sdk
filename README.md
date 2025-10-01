@@ -537,14 +537,11 @@ npm run build
 ## 📚 Documentation
 
 ### API Documentation
-- **Full API Reference**: [sdk.chronosvault.org](https://sdk.chronosvault.org)
-- **Integration Guide**: [docs.chronosvault.org/sdk](https://docs.chronosvault.org/sdk)
-- **Examples Repository**: [examples.chronosvault.org](https://examples.chronosvault.org)
+- **Full API Reference**: [API Documentation](https://github.com/Chronos-Vault/chronos-vault-docs/blob/main/API_REFERENCE.md)
+- **Integration Guide**: [Integration Examples](https://github.com/Chronos-Vault/chronos-vault-sdk/blob/main/INTEGRATION_EXAMPLES.md)
+- **Examples Repository**: [SDK Examples](https://github.com/Chronos-Vault/chronos-vault-sdk/tree/main/examples)
 
 ### Video Tutorials
-- **Getting Started**: [youtube.com/chronosvault](https://youtube.com/chronosvault)
-- **Advanced Features**: [youtube.com/chronosvault/advanced](https://youtube.com/chronosvault/advanced)
-- **Mobile Integration**: [youtube.com/chronosvault/mobile](https://youtube.com/chronosvault/mobile)
 
 ## 🐛 Support
 
@@ -554,9 +551,7 @@ npm run build
 - **Security Issues**: chronosvault@chronosvault.org
 
 ### Community Support
-- **Discord**: [discord.gg/chronosvault](https://discord.gg/chronosvault)
 - **Stack Overflow**: Tag `chronos-vault`
-- **Reddit**: [r/ChronosVault](https://reddit.com/r/ChronosVault)
 
 ## 📈 Roadmap
 
