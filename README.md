@@ -387,6 +387,18 @@ Copyright (c) 2025 Chronos Vault
 
 ---
 
+## 🌐 Community & Social Media
+
+Join the Chronos Vault community and stay updated on the latest developments:
+
+- **Medium**: [https://medium.com/@chronosvault](https://medium.com/@chronosvault) - Technical articles and project updates
+- **Dev.to**: [https://dev.to/chronosvault](https://dev.to/chronosvault) - Developer tutorials and guides
+- **Discord**: [https://discord.gg/WHuexYSV](https://discord.gg/WHuexYSV) - Community discussions and support
+- **X (Twitter)**: [https://x.com/chronosvaultx](https://x.com/chronosvaultx?s=21) - Latest news and announcements
+- **Email**: chronosvault@chronosvault.org
+
+---
+
 **Built with ❤️ for the future of decentralized security**
 
 For platform integration, visit [chronos-vault-platform-](https://github.com/Chronos-Vault/chronos-vault-platform-)
