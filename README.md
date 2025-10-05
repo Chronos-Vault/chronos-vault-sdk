@@ -1,22 +1,27 @@
 # Chronos Vault SDK
 
-> TypeScript SDK for seamless integration with the Chronos Vault platform. Enable developers to build secure multi-chain applications with Trinity Protocol and ZKShield privacy.
+> Official TypeScript SDK for seamless integration with Chronos Vault - Multi-chain digital vault platform with Trinity Protocol security.
 
-[![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![npm](https://img.shields.io/npm/v/@chronos-vault/sdk)](https://www.npmjs.com/package/@chronos-vault/sdk)
+[![License](https://img.shields.io/badge/License-MIT-blue.svg)](./LICENSE)
 [![TypeScript](https://img.shields.io/badge/TypeScript-Ready-blue)](https://www.typescriptlang.org/)
-[![Downloads](https://img.shields.io/npm/dm/@chronos-vault/sdk)](https://www.npmjs.com/package/@chronos-vault/sdk)
+[![npm](https://img.shields.io/npm/v/@chronos-vault/sdk)](https://www.npmjs.com/package/@chronos-vault/sdk)
+
+---
 
 ## 🚀 Quick Start
 
 ### Installation
+
 ```bash
 npm install @chronos-vault/sdk
 # or
 yarn add @chronos-vault/sdk
+# or
+pnpm add @chronos-vault/sdk
 ```
 
 ### Basic Usage
+
 ```typescript
 import { ChronosVaultSDK } from '@chronos-vault/sdk';
 
@@ -27,13 +32,13 @@ const sdk = new ChronosVaultSDK({
   enableQuantumResistance: true
 });
 
-// Initialize the SDK
+// Initialize
 await sdk.initialize();
 
 // Connect wallet
 const wallet = await sdk.connectWallet('metamask');
 
-// Create a vault
+// Create vault
 const vault = await sdk.createVault({
   name: 'My Secure Vault',
   type: 'multi-signature',
@@ -44,164 +49,68 @@ const vault = await sdk.createVault({
 // Transfer assets
 const txHash = await sdk.transfer(vault.id, {
   to: '0x742d35Cc6634C0532925a3b8D11D9b8a79e8b1a1',
-  amount: '1000000000000000000', // 1 ETH in wei
+  amount: '1000000000000000000', // 1 ETH
   asset: 'ETH'
 });
 ```
 
-## 🏗️ SDK Architecture
+---
 
-### Core Components
-- **Authentication**: Multi-chain wallet integration
-- **Vault Management**: Create, configure, and manage vaults
-- **Transaction Handling**: Cross-chain asset transfers
-- **Security Monitoring**: Real-time security status and alerts
-- **Zero-Knowledge Proofs**: Privacy-preserving operations
+## 📚 Documentation
+
+### Core Documentation
+
+- **[SDK Usage Guide](./SDK_USAGE.md)** - Complete SDK reference and examples
+- **[Integration Examples](./INTEGRATION_EXAMPLES.md)** - Real-world integration patterns
+- **[Wallet Integration API](./wallet-integration-api.md)** - Multi-chain wallet connection guide
+
+### External Resources
+
+- **[Platform Repository](https://github.com/Chronos-Vault/chronos-vault-platform-)** - Main application source code
+- **[Smart Contracts](https://github.com/Chronos-Vault/chronos-vault-contracts)** - Deployed contract code
+- **[Technical Docs](https://github.com/Chronos-Vault/chronos-vault-docs)** - Complete technical documentation
+- **[Security Protocols](https://github.com/Chronos-Vault/chronos-vault-security)** - Security architecture
+
+---
+
+## 🏗️ Features
+
+### Multi-Chain Support
+
+The SDK supports seamless integration across multiple blockchains:
+
+- **Ethereum Layer 2 (Arbitrum)** - Primary security with 95% lower fees
+- **Solana** - High-frequency validation and monitoring
+- **TON** - Quantum-resistant backup and emergency recovery
 
 ### Supported Wallets
-- **MetaMask**: Ethereum and EVM-compatible chains
-- **Phantom**: Solana blockchain
-- **TON Keeper**: TON blockchain
-- **WalletConnect**: Universal wallet connection
 
-### Supported Vault Types
-- **Personal Vault**: Individual secure storage
-- **Multi-Signature**: Configurable signature requirements
-- **Time-Locked**: Scheduled asset releases
-- **Geo-Location**: Location-based authentication
-- **Quantum-Resistant**: Post-quantum cryptography
-- **Zero-Knowledge**: Privacy-preserving operations
+- **MetaMask** - Ethereum and EVM-compatible chains
+- **Phantom** - Solana blockchain
+- **TON Keeper** - TON blockchain
+- **WalletConnect** - Universal wallet protocol
 
-## 📚 API Reference
+### Vault Types
 
-### SDK Configuration
-```typescript
-interface SDKConfig {
-  apiEndpoint: string;
-  enableBiometrics?: boolean;
-  enableEncryption?: boolean;
-  enableZeroKnowledge?: boolean;
-  enableQuantumResistance?: boolean;
-  debugMode?: boolean;
-}
-```
+Create specialized vaults for any security need:
 
-### Vault Configuration
-```typescript
-interface VaultConfig {
-  name: string;
-  type: 'personal' | 'multi-signature' | 'geo-location' | 'time-locked' | 'quantum-resistant' | 'zero-knowledge';
-  assets: string[];
-  securityLevel: 'standard' | 'enhanced' | 'maximum';
-  unlockConditions?: {
-    timelock?: string;
-    conditions?: string[];
-    requiredSignatures?: number;
-    geoLocation?: {
-      latitude: number;
-      longitude: number;
-      radius: number;
-    };
-  };
-}
-```
+- **Time-Locked Vaults** - Schedule asset releases
+- **Multi-Signature Vaults** - M-of-N signature requirements
+- **Geo-Location Vaults** - Location-based authentication
+- **Quantum-Resistant Vaults** - Post-quantum cryptography
+- **Zero-Knowledge Vaults** - Privacy-preserving operations
+- **Cross-Chain Fragment Vaults** - Distributed across blockchains
 
-### Core Methods
-
-#### Authentication
-```typescript
-// Initialize SDK
-await sdk.initialize(): Promise<void>
-
-// Authenticate with biometrics or PIN
-await sdk.authenticate(): Promise<boolean>
-
-// Connect wallet
-await sdk.connectWallet(
-  walletType: 'metamask' | 'phantom' | 'tonkeeper' | 'walletconnect'
-): Promise<WalletConnection>
-
-// Get connected wallets
-await sdk.getConnectedWallets(): Promise<WalletConnection[]>
-
-// Disconnect wallet
-await sdk.disconnectWallet(walletType: string): Promise<void>
-```
-
-#### Vault Management
-```typescript
-// Create new vault
-await sdk.createVault(config: VaultConfig): Promise<Vault>
-
-// Get all vaults
-await sdk.getVaults(): Promise<Vault[]>
-
-// Get specific vault
-await sdk.getVault(vaultId: string): Promise<Vault>
-
-// Lock vault
-await sdk.lockVault(vaultId: string): Promise<void>
-
-// Unlock vault
-await sdk.unlockVault(vaultId: string): Promise<void>
-```
-
-#### Transaction Operations
-```typescript
-// Transfer assets
-await sdk.transfer(vaultId: string, config: TransferConfig): Promise<string>
-
-// Get transaction history
-await sdk.getTransactionHistory(vaultId?: string): Promise<Transaction[]>
-
-// Monitor transaction status
-sdk.subscribeToUpdates(callback: (update: any) => void): () => void
-```
-
-#### Security Features
-```typescript
-// Get security status
-await sdk.getSecurityStatus(): Promise<SecurityStatus>
-
-// Enable zero-knowledge proofs
-await sdk.enableZeroKnowledge(): Promise<void>
-
-// Generate privacy proof
-await sdk.generatePrivacyProof(
-  type: 'ownership' | 'sufficiency' | 'compliance',
-  data: any
-): Promise<ZKProof>
-
-// Verify proof
-await sdk.verifyProof(proof: ZKProof): Promise<boolean>
-```
+---
 
 ## 🔐 Security Features
 
-### Zero-Knowledge Privacy (ZKShield)
+### Trinity Protocol
+
+2-of-3 consensus across three blockchains ensures mathematical security:
+
 ```typescript
-// Prove vault ownership without revealing identity
-const ownershipProof = await sdk.generatePrivacyProof('ownership', {
-  vaultId: 'vault_123',
-  ownerAddress: '0x...'
-});
-
-// Prove sufficient funds without revealing balance
-const sufficiencyProof = await sdk.generatePrivacyProof('sufficiency', {
-  vaultId: 'vault_123',
-  requiredAmount: '1000000000000000000'
-});
-
-// Prove compliance without revealing transaction details
-const complianceProof = await sdk.generatePrivacyProof('compliance', {
-  vaultId: 'vault_123',
-  regulatoryRequirements: ['kyc', 'aml']
-});
-```
-
-### Trinity Protocol Integration
-```typescript
-// Check cross-chain consensus status
+// Check cross-chain consensus
 const consensus = await sdk.getCrossChainConsensus(vaultId);
 
 // Verify Trinity Protocol validation
@@ -213,304 +122,191 @@ const isValid = await sdk.verifyTrinityProtocol(
 );
 ```
 
-### Quantum-Resistant Operations
+### Zero-Knowledge Proofs
+
+Privacy-preserving verification without revealing sensitive data:
+
+```typescript
+// Prove ownership without revealing identity
+const ownershipProof = await sdk.generatePrivacyProof('ownership', {
+  vaultId: 'vault_123',
+  ownerAddress: '0x...'
+});
+
+// Prove sufficient funds without revealing balance
+const sufficiencyProof = await sdk.generatePrivacyProof('sufficiency', {
+  vaultId: 'vault_123',
+  requiredAmount: '1000000000000000000'
+});
+
+// Verify proof
+const isValid = await sdk.verifyProof(ownershipProof);
+```
+
+### Quantum-Resistant Encryption
+
+Future-proof your assets against quantum computing threats:
+
 ```typescript
 // Enable quantum-resistant encryption
 await sdk.enableQuantumResistance();
 
-// Generate quantum-resistant keys
-const keyPair = await sdk.generateQuantumResistantKeys();
-
-// Encrypt data with post-quantum algorithms
-const encrypted = await sdk.quantumEncrypt(data, publicKey);
-
-// Decrypt data
-const decrypted = await sdk.quantumDecrypt(encrypted, privateKey);
-```
-
-## 💻 Integration Examples
-
-### React Application
-```typescript
-import React, { useEffect, useState } from 'react';
-import { ChronosVaultSDK } from '@chronos-vault/sdk';
-
-const VaultManager: React.FC = () => {
-  const [sdk, setSdk] = useState<ChronosVaultSDK | null>(null);
-  const [vaults, setVaults] = useState<Vault[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const initSDK = async () => {
-      const chronosSDK = new ChronosVaultSDK({
-        apiEndpoint: 'https://api.chronosvault.org',
-        enableZeroKnowledge: true
-      });
-      
-      await chronosSDK.initialize();
-      setSdk(chronosSDK);
-      
-      // Load existing vaults
-      const userVaults = await chronosSDK.getVaults();
-      setVaults(userVaults);
-      setLoading(false);
-    };
-
-    initSDK();
-  }, []);
-
-  const createVault = async () => {
-    if (!sdk) return;
-    
-    const newVault = await sdk.createVault({
-      name: 'My New Vault',
-      type: 'personal',
-      securityLevel: 'enhanced',
-      assets: ['ETH', 'USDC']
-    });
-    
-    setVaults([...vaults, newVault]);
-  };
-
-  if (loading) return <div>Loading...</div>;
-
-  return (
-    <div>
-      <button onClick={createVault}>Create Vault</button>
-      {vaults.map(vault => (
-        <div key={vault.id}>
-          <h3>{vault.name}</h3>
-          <p>Type: {vault.type}</p>
-          <p>Balance: {vault.balance}</p>
-        </div>
-      ))}
-    </div>
-  );
-};
-```
-
-### Node.js Backend
-```typescript
-import { ChronosVaultSDK } from '@chronos-vault/sdk';
-import express from 'express';
-
-const app = express();
-const sdk = new ChronosVaultSDK({
-  apiEndpoint: 'https://api.chronosvault.org',
-  enableEncryption: true
-});
-
-app.post('/api/vaults', async (req, res) => {
-  try {
-    const { name, type, securityLevel } = req.body;
-    
-    const vault = await sdk.createVault({
-      name,
-      type,
-      securityLevel,
-      assets: ['ETH', 'USDC']
-    });
-    
-    res.json(vault);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
-
-app.get('/api/vaults', async (req, res) => {
-  try {
-    const vaults = await sdk.getVaults();
-    res.json(vaults);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
-
-app.listen(3000, () => {
-  console.log('Server running on port 3000');
+// Create quantum-resistant vault
+const vault = await sdk.createVault({
+  name: 'Quantum-Safe Vault',
+  type: 'quantum-resistant',
+  securityLevel: 'maximum'
 });
 ```
 
-### React Native Mobile App
+---
+
+## 📖 API Reference
+
+### SDK Configuration
+
 ```typescript
-import React, { useEffect } from 'react';
-import { View, Text, Button } from 'react-native';
-import { ChronosVaultSDK } from '@chronos-vault/sdk';
-
-const MobileVault = () => {
-  const [sdk, setSdk] = useState<ChronosVaultSDK | null>(null);
-  
-  useEffect(() => {
-    const initMobileSDK = async () => {
-      const mobileSDK = new ChronosVaultSDK({
-        apiEndpoint: 'https://api.chronosvault.org',
-        enableBiometrics: true, // Enable biometric authentication
-        enableEncryption: true
-      });
-      
-      await mobileSDK.initialize();
-      setSdk(mobileSDK);
-    };
-    
-    initMobileSDK();
-  }, []);
-  
-  const authenticateWithBiometrics = async () => {
-    if (!sdk) return;
-    
-    const authenticated = await sdk.authenticate();
-    if (authenticated) {
-      // User authenticated successfully
-      console.log('Biometric authentication successful');
-    }
-  };
-  
-  return (
-    <View>
-      <Text>Chronos Vault Mobile</Text>
-      <Button 
-        title="Authenticate" 
-        onPress={authenticateWithBiometrics} 
-      />
-    </View>
-  );
-};
-```
-
-## 🧪 Testing
-
-### Unit Tests
-```typescript
-import { ChronosVaultSDK } from '@chronos-vault/sdk';
-import { jest } from '@jest/globals';
-
-describe('ChronosVaultSDK', () => {
-  let sdk: ChronosVaultSDK;
-  
-  beforeEach(() => {
-    sdk = new ChronosVaultSDK({
-      apiEndpoint: 'https://api.test.chronosvault.org',
-      debugMode: true
-    });
-  });
-  
-  test('should initialize successfully', async () => {
-    await expect(sdk.initialize()).resolves.not.toThrow();
-  });
-  
-  test('should create vault', async () => {
-    const vault = await sdk.createVault({
-      name: 'Test Vault',
-      type: 'personal',
-      securityLevel: 'standard',
-      assets: ['ETH']
-    });
-    
-    expect(vault.name).toBe('Test Vault');
-    expect(vault.type).toBe('personal');
-  });
-  
-  test('should generate zero-knowledge proof', async () => {
-    const proof = await sdk.generatePrivacyProof('ownership', {
-      vaultId: 'test_vault',
-      ownerAddress: '0x123'
-    });
-    
-    expect(proof).toBeDefined();
-    expect(proof.type).toBe('ownership');
-  });
-});
-```
-
-### Integration Tests
-```bash
-# Run all tests
-npm test
-
-# Run specific test suite
-npm run test:unit
-npm run test:integration
-npm run test:e2e
-
-# Run tests with coverage
-npm run test:coverage
-```
-
-## 🔧 Configuration
-
-### Environment Variables
-```env
-# SDK Configuration
-CHRONOS_API_ENDPOINT=https://api.chronosvault.org
-CHRONOS_ENABLE_DEBUG=true
-CHRONOS_ENABLE_ZK=true
-
-# Wallet Configuration
-ETHEREUM_RPC_URL=https://mainnet.infura.io/v3/YOUR_KEY
-SOLANA_RPC_URL=https://api.mainnet-beta.solana.com
-TON_RPC_URL=https://toncenter.com/api/v2/jsonRPC
-```
-
-### Advanced Configuration
-```typescript
-const sdk = new ChronosVaultSDK({
-  apiEndpoint: 'https://api.chronosvault.org',
-  
-  // Security settings
-  enableBiometrics: true,
-  enableEncryption: true,
-  enableZeroKnowledge: true,
-  enableQuantumResistance: true,
-  
-  // Network settings
-  networkTimeout: 30000,
-  retryAttempts: 3,
-  
-  // Debug settings
-  debugMode: process.env.NODE_ENV === 'development',
-  logLevel: 'info'
-});
-```
-
-## 📊 Performance Monitoring
-
-### Metrics Collection
-```typescript
-// Enable performance monitoring
-sdk.enablePerformanceMonitoring();
-
-// Get performance metrics
-const metrics = await sdk.getPerformanceMetrics();
-console.log('Average response time:', metrics.avgResponseTime);
-console.log('Success rate:', metrics.successRate);
-
-// Custom performance tracking
-sdk.trackEvent('vault_created', {
-  vaultType: 'multi-signature',
-  securityLevel: 'maximum',
-  duration: 1250
-});
-```
-
-### Error Handling
-```typescript
-try {
-  const vault = await sdk.createVault(config);
-} catch (error) {
-  if (error.code === 'INSUFFICIENT_FUNDS') {
-    // Handle insufficient funds
-  } else if (error.code === 'NETWORK_ERROR') {
-    // Handle network issues
-  } else {
-    // Handle other errors
-    console.error('Unexpected error:', error);
-  }
+interface SDKConfig {
+  apiEndpoint: string;
+  enableBiometrics?: boolean;
+  enableEncryption?: boolean;
+  enableZeroKnowledge?: boolean;
+  enableQuantumResistance?: boolean;
+  debugMode?: boolean;
 }
 ```
 
-## 🤝 Contributing
+### Authentication Methods
 
-### Development Setup
+```typescript
+// Initialize SDK
+await sdk.initialize(): Promise<void>
+
+// Authenticate user
+await sdk.authenticate(): Promise<boolean>
+
+// Connect wallet
+await sdk.connectWallet(
+  walletType: 'metamask' | 'phantom' | 'tonkeeper'
+): Promise<WalletConnection>
+
+// Get connected wallets
+await sdk.getConnectedWallets(): Promise<WalletConnection[]>
+
+// Disconnect wallet
+await sdk.disconnectWallet(walletType: string): Promise<void>
+```
+
+### Vault Management
+
+```typescript
+// Create vault
+await sdk.createVault(config: VaultConfig): Promise<Vault>
+
+// Get all vaults
+await sdk.getVaults(): Promise<Vault[]>
+
+// Get specific vault
+await sdk.getVault(vaultId: string): Promise<Vault>
+
+// Lock/unlock vault
+await sdk.lockVault(vaultId: string): Promise<void>
+await sdk.unlockVault(vaultId: string): Promise<void>
+```
+
+### Transaction Operations
+
+```typescript
+// Transfer assets
+await sdk.transfer(
+  vaultId: string,
+  config: TransferConfig
+): Promise<string>
+
+// Get transaction history
+await sdk.getTransactionHistory(
+  vaultId?: string
+): Promise<Transaction[]>
+
+// Subscribe to updates
+sdk.subscribeToUpdates(
+  callback: (update: any) => void
+): () => void
+```
+
+---
+
+## 💻 Integration Examples
+
+### React Integration
+
+```typescript
+import { ChronosVaultSDK } from '@chronos-vault/sdk';
+import { useEffect, useState } from 'react';
+
+function MyComponent() {
+  const [sdk, setSDK] = useState<ChronosVaultSDK | null>(null);
+  const [vaults, setVaults] = useState([]);
+
+  useEffect(() => {
+    const initSDK = async () => {
+      const instance = new ChronosVaultSDK({
+        apiEndpoint: 'https://api.chronosvault.org'
+      });
+      await instance.initialize();
+      setSDK(instance);
+      
+      const userVaults = await instance.getVaults();
+      setVaults(userVaults);
+    };
+    
+    initSDK();
+  }, []);
+
+  return (
+    <div>
+      {vaults.map(vault => (
+        <div key={vault.id}>{vault.name}</div>
+      ))}
+    </div>
+  );
+}
+```
+
+### Node.js Integration
+
+```typescript
+import { ChronosVaultSDK } from '@chronos-vault/sdk';
+
+async function main() {
+  const sdk = new ChronosVaultSDK({
+    apiEndpoint: process.env.CHRONOS_API_ENDPOINT,
+    enableZeroKnowledge: true
+  });
+
+  await sdk.initialize();
+  
+  const vaults = await sdk.getVaults();
+  console.log('User vaults:', vaults);
+}
+
+main();
+```
+
+For complete integration examples, see [INTEGRATION_EXAMPLES.md](./INTEGRATION_EXAMPLES.md)
+
+---
+
+## 🛠️ Development
+
+### Prerequisites
+
+- Node.js 18+ 
+- TypeScript 5+
+- npm/yarn/pnpm
+
+### Local Development
+
 ```bash
 # Clone repository
 git clone https://github.com/Chronos-Vault/chronos-vault-sdk.git
@@ -519,73 +315,78 @@ cd chronos-vault-sdk
 # Install dependencies
 npm install
 
+# Build SDK
+npm run build
+
 # Run tests
 npm test
 
-# Build SDK
-npm run build
+# Lint code
+npm run lint
 ```
-
-### Contributing Guidelines
-1. Fork the repository
-2. Create feature branch
-3. Add tests for new functionality
-4. Ensure all tests pass
-5. Update documentation
-6. Submit pull request
-
-## 📚 Documentation
-
-### API Documentation
-- **Full API Reference**: [API Documentation](https://github.com/Chronos-Vault/chronos-vault-docs/blob/main/API_REFERENCE.md)
-- **Integration Guide**: [Integration Examples](https://github.com/Chronos-Vault/chronos-vault-sdk/blob/main/INTEGRATION_EXAMPLES.md)
-- **Examples Repository**: [SDK Examples](https://github.com/Chronos-Vault/chronos-vault-sdk/tree/main/examples)
-
-### Video Tutorials
-
-## 🐛 Support
-
-### Issue Reporting
-- **Bug Reports**: [GitHub Issues](https://github.com/Chronos-Vault/chronos-vault-sdk/issues)
-- **Feature Requests**: [GitHub Discussions](https://github.com/Chronos-Vault/chronos-vault-sdk/discussions)
-- **Security Issues**: chronosvault@chronosvault.org
-
-### Community Support
-- **Stack Overflow**: Tag `chronos-vault`
-
-## 📈 Roadmap
-
-### Current Version (v1.0)
-- ✅ Basic vault operations
-- ✅ Multi-chain wallet integration
-- ✅ Zero-knowledge proofs
-- ✅ Trinity Protocol integration
-
-### Next Release (v1.1)
-- 🔄 Mobile SDK optimization
-- 🔄 Advanced ZK features
-- 🔄 Performance improvements
-- 🔄 Additional wallet support
-
-### Future Releases
-- 📅 React Native SDK
-- 📅 Flutter SDK
-- 📅 Web3 gaming integration
-- 📅 DeFi protocol connectors
-
-## ⚖️ License
-
-MIT License - see [LICENSE](LICENSE) file for details.
-
-## 🔗 Related Repositories
-
-- **[Platform](https://github.com/Chronos-Vault/chronos-vault-platform)**: Core application
-- **[Contracts](https://github.com/Chronos-Vault/chronos-vault-contracts)**: Smart contracts
-- **[Docs](https://github.com/Chronos-Vault/chronos-vault-docs)**: Documentation
-- **[Security](https://github.com/Chronos-Vault/chronos-vault-security)**: Security audits
 
 ---
 
-**Chronos Vault SDK: Empowering Developers with Mathematical Security**
+## 🔗 Chronos Vault Ecosystem
 
-*Build the future of secure applications with our comprehensive TypeScript SDK.*
+| Repository | Purpose | Link |
+|------------|---------|------|
+| **Platform** | Main application | [chronos-vault-platform-](https://github.com/Chronos-Vault/chronos-vault-platform-) |
+| **Contracts** | Smart contracts | [chronos-vault-contracts](https://github.com/Chronos-Vault/chronos-vault-contracts) |
+| **SDK** | TypeScript SDK (this repo) | [chronos-vault-sdk](https://github.com/Chronos-Vault/chronos-vault-sdk) |
+| **Documentation** | Technical docs | [chronos-vault-docs](https://github.com/Chronos-Vault/chronos-vault-docs) |
+| **Security** | Security protocols | [chronos-vault-security](https://github.com/Chronos-Vault/chronos-vault-security) |
+
+---
+
+## 🤝 Contributing
+
+We welcome contributions from the developer community!
+
+### How to Contribute
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+### Development Guidelines
+
+- Write clear, concise code with comments
+- Follow TypeScript best practices
+- Add tests for new features
+- Update documentation for API changes
+- Ensure all tests pass before submitting
+
+---
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](./LICENSE) file for details.
+
+Copyright (c) 2025 Chronos Vault
+
+---
+
+## 📧 Support
+
+- **Issues**: [GitHub Issues](https://github.com/Chronos-Vault/chronos-vault-sdk/issues)
+- **Documentation**: [Technical Docs](https://github.com/Chronos-Vault/chronos-vault-docs)
+- **Security**: [Security Policy](https://github.com/Chronos-Vault/chronos-vault-security)
+
+---
+
+## 🌟 Why Chronos Vault SDK?
+
+- **Mathematical Security**: Cryptographic proofs, not trust assumptions
+- **Multi-Chain Native**: Built for cross-chain from the ground up
+- **Developer Friendly**: Clean API, TypeScript support, comprehensive docs
+- **Production Ready**: Battle-tested security and reliability
+- **Open Source**: Transparent, auditable, community-driven
+
+---
+
+**Built with ❤️ for the future of decentralized security**
+
+For platform integration, visit [chronos-vault-platform-](https://github.com/Chronos-Vault/chronos-vault-platform-)
