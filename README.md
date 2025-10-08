@@ -79,7 +79,7 @@ const txHash = await sdk.transfer(vault.id, {
 
 The SDK supports seamless integration across multiple blockchains:
 
-- **Ethereum Layer 2 (Arbitrum)** - Primary security with 95% lower fees
+- **Arbitrum L2** - Primary security with 95% lower fees
 - **Solana** - High-frequency validation and monitoring
 - **TON** - Quantum-resistant backup and emergency recovery
 
@@ -428,8 +428,8 @@ For platform integration, visit [chronos-vault-platform-](https://github.com/Chr
 
 | Contract | Address | Status |
 |----------|---------|--------|
-| **CrossChainBridgeV3** | `0x5bC40A7a47A2b767D948FEEc475b24c027B43867` | ✅ Deployed |
-| **CVTBridgeV3** | `0x7693a841Eec79Da879241BC0eCcc80710F39f399` | ✅ Deployed |
+| **CrossChainBridgeV3** | `0x39601883CD9A115Aba0228fe0620f468Dc710d54` | ✅ Deployed |
+| **CVTBridgeV3** | `0x00d02550f2a8Fd2CeCa0d6b7882f05Beead1E5d0` | ✅ Deployed |
 | **EmergencyMultiSig** | `0xFafCA23a7c085A842E827f53A853141C8243F924` | ✅ Deployed |
 
 **V3 Features:**
