@@ -1,5 +1,19 @@
 # Chronos Vault SDK Usage Guide
 
+
+## Real V3 Contract Addresses
+
+All examples use real deployed contracts on Arbitrum Sepolia:
+
+```javascript
+import { CONTRACTS } from '@chronos-vault/sdk';
+
+// Use real V3 contracts
+const bridgeAddress = CONTRACTS.ARBITRUM_SEPOLIA.CrossChainBridgeV3;
+// '0x39601883CD9A115Aba0228fe0620f468Dc710d54'
+```
+
+
 ## Overview
 
 The Chronos Vault SDK provides client libraries for multiple programming languages, enabling seamless integration with the Chronos Vault platform. This document provides guidance on how to use these SDKs to interact with the Chronos Vault API.
@@ -216,7 +230,7 @@ const newVault = await client.vaults.create({
 });
 
 console.log(newVault.id); // "v_1a2b3c4d5e6f"
-console.log(newVault.depositAddresses.ethereum); // "0xabcdef1234567890abcdef1234567890abcdef12"
+console.log(newVault.depositAddresses.arbitrum); // Real Arbitrum L2 address
 ```
 
 ##### Python
