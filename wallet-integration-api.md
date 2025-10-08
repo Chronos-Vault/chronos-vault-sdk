@@ -53,7 +53,7 @@ X-Wallet-Signature: {signature}
 {
   "user_address": "0x...",
   "wallet_signature": "0x...",
-  "chain": "ethereum|solana|ton",
+  "chain": "arbitrum|solana|ton",
   "session_duration": 3600
 }
 ```
@@ -88,7 +88,7 @@ X-Wallet-ID: {wallet_id}
   "name": "My Secure Vault",
   "assets": [
     {
-      "chain": "ethereum",
+      "chain": "arbitrum",
       "token_address": "0x...",
       "amount": "1000000000000000000"
     }
@@ -134,7 +134,7 @@ GET /api/v1/vault/{vault_id}/status
   "total_value_usd": "50000.00",
   "assets": [
     {
-      "chain": "ethereum",
+      "chain": "arbitrum",
       "token_symbol": "ETH",
       "amount": "20.5",
       "value_usd": "40000.00"
@@ -166,7 +166,7 @@ POST /api/v1/transaction/verify
   "to_address": "0x...",
   "amount": "1000000000000000000",
   "token_address": "0x...",
-  "chain": "ethereum",
+  "chain": "arbitrum",
   "transaction_data": "0x..."
 }
 ```
@@ -205,7 +205,7 @@ POST /api/v1/transaction/execute
 {
   "verification_id": "verify_...",
   "signed_transaction": "0x...",
-  "chain": "ethereum",
+  "chain": "arbitrum",
   "priority": "standard|fast|instant"
 }
 ```
@@ -345,7 +345,7 @@ POST /api/v1/bridge/transfer
 **Request:**
 ```json
 {
-  "from_chain": "ethereum",
+  "from_chain": "arbitrum",
   "to_chain": "solana",
   "token_address": "0x...",
   "amount": "1000000000000000000",
@@ -377,7 +377,7 @@ POST /api/v1/bridge/transfer
 ## Security Features
 
 ### 1. Trinity Protocol Integration
-- All operations verified across Ethereum, Solana, and TON
+- All operations verified across Arbitrum L2, Solana, and TON
 - Mathematical consensus required for critical operations
 - Automatic failover if any chain experiences issues
 
