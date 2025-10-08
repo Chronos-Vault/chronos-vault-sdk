@@ -1,5 +1,23 @@
 # Chronos Vault Integration Examples
 
+
+
+## V3 Smart Contract Addresses (Arbitrum Sepolia)
+
+Use these real deployed contract addresses in your integrations:
+
+```javascript
+const CONTRACTS = {
+  CrossChainBridgeV3: '0x39601883CD9A115Aba0228fe0620f468Dc710d54',
+  CVTBridgeV3: '0x00d02550f2a8Fd2CeCa0d6b7882f05Beead1E5d0',
+  EmergencyMultiSig: '0xFafCA23a7c085A842E827f53A853141C8243F924',
+  CVTToken: '0xFb419D8E32c14F774279a4dEEf330dc893257147'
+};
+```
+
+**Verify on Arbiscan**: https://sepolia.arbiscan.io
+
+
 This document provides practical examples of integrating Chronos Vault into various application types. These examples demonstrate real-world usage scenarios to help developers understand how to effectively leverage the platform's capabilities.
 
 ## Table of Contents
