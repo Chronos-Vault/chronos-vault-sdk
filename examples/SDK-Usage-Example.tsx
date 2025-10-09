@@ -25,7 +25,7 @@ import ChronosVaultSDK, {
 
 // Initialize SDK with your server endpoint
 const sdk = new ChronosVaultSDK({
-  apiEndpoint: 'https://8e33114e-6bdb-4fc9-a798-e4b7d77b5366-00-23l8s2c5r5iyx.spock.replit.dev',
+  apiEndpoint: 'https://8e33114e-6bdb-4fc9-a798-e4b7d77b5366-00-23l8s2c5r5iyx.spock.chronosvault.org',
   enableBiometrics: true,
   enableEncryption: true,
   debugMode: true
