@@ -40,7 +40,7 @@ import { ChronosVaultSDK } from '@chronos-vault/sdk';
 
 // Initialize SDK
 const sdk = new ChronosVaultSDK({
-  apiEndpoint: 'https://api.chronosvault.org',
+  apiEndpoint: 'https://chronosvault.org/api',
   enableZeroKnowledge: true,
   enableQuantumResistance: true
 });
@@ -264,7 +264,7 @@ function MyComponent() {
   useEffect(() => {
     const initSDK = async () => {
       const instance = new ChronosVaultSDK({
-        apiEndpoint: 'https://api.chronosvault.org'
+        apiEndpoint: 'https://chronosvault.org/api'
       });
       await instance.initialize();
       setSDK(instance);
@@ -509,7 +509,7 @@ Access comprehensive development tools and resources:
 
 ```typescript
 const sdk = new ChronosVaultSDK({
-  apiEndpoint: 'https://api.chronosvault.org',
+  apiEndpoint: 'https://chronosvault.org/api',
   enableDeveloperMode: true, // Access portal features
   enableAnalytics: true       // Track usage metrics
 });
@@ -602,7 +602,7 @@ Access the complete developer platform with interactive tools and documentation:
 
 ```typescript
 const sdk = new ChronosVaultSDK({
-  apiEndpoint: 'https://api.chronosvault.org',
+  apiEndpoint: 'https://chronosvault.org/api',
   
   // Trinity Protocol - 2-of-3 Consensus
   enableTrinityProtocol: true,
