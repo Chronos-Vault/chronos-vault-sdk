@@ -2,8 +2,6 @@
 
 **SDK Version:** 1.0.0  
 **Platform URL:** https://chronosvault.org  
-**API Endpoint Base:** https://chronosvault.org/api  
-**API Documentation:** https://chronosvault.org/api-documentation  
 **Last Updated:** October 2025
 
 ---
@@ -20,11 +18,12 @@ The Chronos Vault Developer Portal provides comprehensive tools, documentation, 
 
 | Page | URL | Description |
 |------|-----|-------------|
+| **API Overview** | https://chronosvault.org/api | Interactive API landing page with live examples |
+| **API Documentation** | https://chronosvault.org/api-documentation | Complete REST API reference |
 | **Developer Portal** | https://chronosvault.org/developer-portal | Main developer hub |
 | **SDK Documentation** | https://chronosvault.org/sdk-documentation | Complete SDK reference |
 | **Smart Contract SDK** | https://chronosvault.org/smart-contract-sdk | Contract interaction tools |
 | **Integration Guide** | https://chronosvault.org/integration-guide | Step-by-step integration |
-| **API Documentation** | https://chronosvault.org/api-documentation | REST API reference |
 | **Integration Examples** | https://chronosvault.org/integration-examples | Code examples |
 | **API Keys** | https://chronosvault.org/developer-api-keys | Generate API keys |
 | **Wallet Demo** | https://chronosvault.org/wallet-integration-demo | Test wallet integration |
@@ -51,19 +50,41 @@ The Chronos Vault Developer Portal provides comprehensive tools, documentation, 
 
 ## 🔗 API Structure
 
-### **Important: API Endpoints vs Documentation**
+### **API Pages & Endpoints**
 
-The Chronos Vault API uses the following structure:
+Chronos Vault provides two types of API resources:
 
-**For Making API Requests:**
+**1. API Overview Page** (for browsing)
+```
+Visit: https://chronosvault.org/api
+```
+Interactive landing page showcasing:
+- Trinity Protocol architecture
+- Mathematical Defense Layer
+- Real technology stack
+- Live endpoint examples
+- Smart contract addresses
+- Security layers overview
+
+**2. API Documentation** (for reference)
+```
+Visit: https://chronosvault.org/api-documentation
+```
+Complete REST API reference with:
+- Full endpoint documentation
+- Request/response schemas
+- Authentication details
+- Code examples (JavaScript, Python, cURL)
+
+**3. API Endpoint Base** (for requests)
 ```
 Base URL: https://chronosvault.org/api
 ```
-
-**For Reading API Documentation:**
-```
-Documentation Page: https://chronosvault.org/api-documentation
-```
+Use this base URL for making API requests:
+- `GET https://chronosvault.org/api/vaults`
+- `POST https://chronosvault.org/api/vaults`
+- `GET https://chronosvault.org/api/zk/status`
+- etc.
 
 ### **Example API Endpoints**
 
@@ -213,10 +234,11 @@ const V3_CONTRACTS = {
 ## 📖 Documentation Resources
 
 ### SDK & Integration
+- **[API Overview](https://chronosvault.org/api)** - Interactive API landing page
+- **[API Documentation](https://chronosvault.org/api-documentation)** - REST API reference
 - **[SDK Documentation](https://chronosvault.org/sdk-documentation)** - Complete SDK reference
 - **[Integration Guide](https://chronosvault.org/integration-guide)** - Step-by-step guide
 - **[Integration Examples](https://chronosvault.org/integration-examples)** - Code examples
-- **[API Documentation](https://chronosvault.org/api-documentation)** - REST API reference
 
 ### Security & Verification
 - **[Trinity Protocol](https://chronosvault.org/trinity-protocol)** - 2-of-3 consensus
@@ -230,7 +252,7 @@ const V3_CONTRACTS = {
 - **[TON](https://chronosvault.org/ton-integration)** - TON blockchain guide
 
 ### GitHub Repositories
-- **[Platform Source](https://github.com/Chronos-Vault/chronos-vault-platform-)** - Main application
+- **[Platform Source](https://github.com/Chronos-Vault/chronos-vault-platform)** - Main application
 - **[Smart Contracts](https://github.com/Chronos-Vault/chronos-vault-contracts)** - Contract code
 - **[Technical Docs](https://github.com/Chronos-Vault/chronos-vault-docs)** - Documentation
 - **[Security & Proofs](https://github.com/Chronos-Vault/chronos-vault-security)** - Formal verification
@@ -261,6 +283,6 @@ Visit **[Developer API Keys](https://chronosvault.org/developer-api-keys)** to g
 
 **Trinity Protocol • 7 Cryptographic Layers • 35/35 Theorems Proven**
 
-[Developer Portal](https://chronosvault.org/developer-portal) • [API Docs](https://chronosvault.org/api-documentation) • [Trinity Protocol](https://chronosvault.org/trinity-protocol)
+[API Overview](https://chronosvault.org/api) • [API Docs](https://chronosvault.org/api-documentation) • [Trinity Protocol](https://chronosvault.org/trinity-protocol)
 
 </div>
