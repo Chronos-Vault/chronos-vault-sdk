@@ -1,40 +1,71 @@
 /**
  * Chronos Vault SDK
- * Official TypeScript SDK for multi-chain security vaults
  * 
- * @packageDocumentation
+ * Professional TypeScript client library for interacting with Chronos Vault's
+ * Mathematical Defense Layer
  */
 
-export { ChronosVaultSDK } from './ChronosVaultSDK';
+export interface ChronosVaultConfig {
+  apiUrl: string;
+  websocketUrl: string;
+  apiKey?: string;
+}
 
-// Export types
-export type {
-  VaultConfig,
-  Vault,
-  WalletConnection,
-  TransferConfig,
-  SecurityStatus,
-  SDKConfig
-} from './ChronosVaultSDK';
+export interface VaultCreateRequest {
+  vaultType: string;
+  securityLevel: string;
+  enableQuantumResistant: boolean;
+  chainPreference: string;
+}
 
-// Export constants
-export const CONTRACTS = {
-  ARBITRUM_SEPOLIA: {
-    CrossChainBridgeV3: '0x39601883CD9A115Aba0228fe0620f468Dc710d54',
-    CVTBridgeV3: '0x00d02550f2a8Fd2CeCa0d6b7882f05Beead1E5d0',
-    EmergencyMultiSig: '0xFafCA23a7c085A842E827f53A853141C8243F924',
-    CVTToken: '0xFb419D8E32c14F774279a4dEEf330dc893257147'
+export class ChronosVaultClient {
+  private config: ChronosVaultConfig;
+  private ws?: WebSocket;
+
+  constructor(config: ChronosVaultConfig) {
+    this.config = config;
   }
-};
 
-export const CHAIN_IDS = {
-  ARBITRUM_SEPOLIA: 421614,
-  SOLANA_DEVNET: 'devnet',
-  TON_TESTNET: 'testnet'
-};
+  /**
+   * Create a new vault with Mathematical Defense Layer validation
+   */
+  async createVault(request: VaultCreateRequest): Promise<any> {
+    const response = await fetch(`${this.config.apiUrl}/api/vault/create`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        ...(this.config.apiKey && { 'Authorization': `Bearer ${this.config.apiKey}` })
+      },
+      body: JSON.stringify(request)
+    });
+    return response.json();
+  }
 
-export const RPC_URLS = {
-  ARBITRUM_SEPOLIA: 'https://sepolia-rollup.arbitrum.io/rpc',
-  SOLANA_DEVNET: 'https://api.devnet.solana.org',
-  TON_TESTNET: 'https://testnet.toncenter.com/api/v2/jsonRPC'
-};
+  /**
+   * Subscribe to real-time MDL updates
+   */
+  subscribe(event: string, callback: (data: any) => void): void {
+    if (!this.ws) {
+      this.ws = new WebSocket(this.config.websocketUrl);
+    }
+    
+    this.ws.addEventListener('message', (msg) => {
+      const data = JSON.parse(msg.data);
+      if (data.type === event) {
+        callback(data);
+      }
+    });
+  }
+
+  /**
+   * Disconnect WebSocket
+   */
+  disconnect(): void {
+    if (this.ws) {
+      this.ws.close();
+      this.ws = undefined;
+    }
+  }
+}
+
+export default ChronosVaultClient;
