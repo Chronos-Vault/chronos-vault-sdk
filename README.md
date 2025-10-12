@@ -1,5 +1,11 @@
 # Chronos Vault SDK
 
+
+![NPM Version](https://img.shields.io/badge/npm-v1.0.0-blue)
+![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue)
+![Multi Chain](https://img.shields.io/badge/chains-Arbitrum%20%7C%20Solana%20%7C%20TON-green)
+![License](https://img.shields.io/badge/license-MIT-blue)
+
 ## TypeScript/JavaScript SDK for Mathematical Defense Layer
 
 Professional client library for interacting with Chronos Vault's mathematically provable security platform.
