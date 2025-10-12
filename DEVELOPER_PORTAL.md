@@ -2,7 +2,7 @@
 
 **SDK Version:** 1.0.0  
 **Platform URL:** https://chronosvault.org  
-**API Endpoint:** https://api.chronosvault.org  
+**API Base:** https://chronosvault.org/api  
 **Last Updated:** October 2025
 
 ---
@@ -50,19 +50,82 @@ The Chronos Vault Developer Portal provides comprehensive tools, documentation, 
 
 ## 🔗 API Endpoints
 
-### Production
+### **IMPORTANT: API Structure**
+
+The Chronos Vault API is served from the **same domain** as the platform:
 
 ```typescript
-const PRODUCTION_API = 'https://api.chronosvault.org';
+// ✅ CORRECT - API on same domain
+const API_BASE = 'https://chronosvault.org/api';
+
+// ❌ WRONG - No separate api subdomain
+// const API_BASE = 'https://api.chronosvault.org';
 ```
 
-### Testnet
+### **Production API**
 
 ```typescript
-const TESTNET_API = 'https://testnet-api.chronosvault.org';
+const PRODUCTION_CONFIG = {
+  baseURL: 'https://chronosvault.org',
+  apiPath: '/api',
+  
+  // Example endpoints
+  vaults: '/api/vaults',
+  wallet: '/api/wallet',
+  bridge: '/api/bridge',
+  zeroKnowledge: '/api/zk'
+};
+
+// Make API calls
+const response = await fetch('https://chronosvault.org/api/vaults');
 ```
 
-### Blockchain RPCs
+### **Testnet API**
+
+For testnet/development, use relative paths or localhost:
+
+```typescript
+const TESTNET_CONFIG = {
+  // Development (relative paths work)
+  apiPath: '/api',
+  
+  // Or explicit localhost
+  baseURL: 'http://localhost:5000',
+  apiPath: '/api'
+};
+```
+
+### **Available API Routes**
+
+```typescript
+const API_ROUTES = {
+  // Wallet & Auth
+  walletVerify: '/api/wallet/verify-signature',
+  walletStatus: '/api/wallet/status',
+  requestNonce: '/api/vault/request-nonce',
+  
+  // Vaults
+  vaults: '/api/vaults',
+  createVault: '/api/vault-creation',
+  vaultChain: '/api/vault-chain',
+  
+  // Cross-Chain
+  bridge: '/api/bridge',
+  crossChainOps: '/api/cross-chain-operations',
+  chainFees: '/api/chain-fees',
+  
+  // Security
+  zeroKnowledge: '/api/zk',
+  geoVault: '/api/geo-vault',
+  
+  // Monitoring
+  performance: '/api/performance',
+  health: '/api/health',
+  explorer: '/api/explorer'
+};
+```
+
+### **Blockchain RPCs**
 
 ```typescript
 const RPC_ENDPOINTS = {
@@ -82,15 +145,15 @@ const RPC_ENDPOINTS = {
 
 ## 🚀 SDK Integration
 
-### Initialize with Platform Configuration
+### Initialize with Correct API Configuration
 
 ```typescript
 import { ChronosVaultSDK } from '@chronos-vault/sdk';
 
 const sdk = new ChronosVaultSDK({
-  // API Configuration
-  apiEndpoint: 'https://api.chronosvault.org',
-  environment: 'production', // or 'testnet'
+  // ✅ CORRECT - Use platform domain
+  apiEndpoint: 'https://chronosvault.org',
+  apiPath: '/api',
   
   // Trinity Protocol - 2-of-3 Consensus
   enableTrinityProtocol: true,
@@ -106,6 +169,23 @@ const sdk = new ChronosVaultSDK({
 });
 
 await sdk.initialize();
+```
+
+### Make API Requests
+
+```typescript
+// Using SDK (recommended)
+const vaults = await sdk.getVaults();
+
+// Direct API calls
+const response = await fetch('https://chronosvault.org/api/vaults', {
+  credentials: 'include',
+  headers: {
+    'Content-Type': 'application/json'
+  }
+});
+
+const vaults = await response.json();
 ```
 
 ---
@@ -203,34 +283,15 @@ const contracts = await sdk.getV3Contracts();
 
 ---
 
-## 🔄 Real-Time Monitoring
-
-### WebSocket Connection
-
-```typescript
-// Connect to WebSocket
-const ws = await sdk.connectWebSocket();
-
-// Listen for vault events
-ws.on('vault:created', (vault) => {
-  console.log('New vault:', vault.id);
-});
-
-ws.on('trinity:consensus', (consensus) => {
-  console.log('Cross-chain consensus updated:', consensus);
-});
-```
-
----
-
 ## 🌐 Platform Integration Examples
 
 ### Example 1: Create Vault with Trinity Protocol
 
 ```typescript
-// Initialize SDK
+// Initialize SDK with correct API
 const sdk = new ChronosVaultSDK({
-  apiEndpoint: 'https://api.chronosvault.org',
+  apiEndpoint: 'https://chronosvault.org',
+  apiPath: '/api',
   enableTrinityProtocol: true
 });
 
@@ -249,24 +310,24 @@ console.log('Approved by Solana:', consensus.solana.approved);
 console.log('Approved by TON:', consensus.ton.approved);
 ```
 
-### Example 2: Cross-Chain Transfer
+### Example 2: Direct API Call
 
 ```typescript
-// Initiate cross-chain transfer
-const transfer = await sdk.crossChainTransfer({
-  fromChain: 'arbitrum',
-  toChain: 'solana',
-  amount: '1000000000', // 1 CVT
-  recipient: 'SOLANA_ADDRESS'
+// Wallet verification
+const response = await fetch('https://chronosvault.org/api/wallet/verify-signature', {
+  method: 'POST',
+  credentials: 'include',
+  headers: {
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify({
+    address: walletAddress,
+    signature: signature,
+    message: message
+  })
 });
 
-// Check Trinity Protocol approval
-const trinityStatus = await sdk.verifyTrinityProtocol(
-  transfer.id,
-  transfer.arbitrumTxHash,
-  transfer.solanaTxHash,
-  transfer.tonTxHash
-);
+const result = await response.json();
 ```
 
 ---
@@ -300,18 +361,6 @@ const trinityStatus = await sdk.verifyTrinityProtocol(
 
 ## 🔑 Authentication
 
-### API Key Generation
-
-Visit **[Developer API Keys](https://chronosvault.org/developer-api-keys)** to generate your API key.
-
-```typescript
-// Use API key
-sdk.setAPIKey(
-  'your-api-key',
-  'your-api-secret'
-);
-```
-
 ### Wallet-Based Auth
 
 ```typescript
@@ -322,6 +371,10 @@ const auth = await sdk.authenticateWithWallet({
 
 console.log('Authenticated:', auth.address);
 ```
+
+### API Key Generation
+
+Visit **[Developer API Keys](https://chronosvault.org/developer-api-keys)** to generate your credentials.
 
 ---
 
