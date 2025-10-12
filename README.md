@@ -16,8 +16,8 @@ npm install @chronos-vault/sdk
 import { ChronosVaultClient } from '@chronos-vault/sdk';
 
 const client = new ChronosVaultClient({
-  apiUrl: 'https://api.chronosvault.io',
-  websocketUrl: 'wss://ws.chronosvault.io'
+  apiUrl: 'https://api.chronosvault.org',
+  websocketUrl: 'wss://ws.chronosvault.org'
 });
 
 // Create vault with MDL validation
@@ -45,7 +45,7 @@ client.subscribe('mdl-status', (data) => {
 
 ## API Reference
 
-See [documentation](https://docs.chronosvault.io/sdk) for complete API reference.
+See [documentation](https://docs.chronosvault.org/sdk) for complete API reference.
 
 ## License
 
