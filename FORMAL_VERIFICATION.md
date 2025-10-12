@@ -33,183 +33,65 @@ When you integrate the Chronos Vault SDK, you get:
 
 ---
 
-## 🔒 Key Security Theorems for SDK Users
+## 🔒 Key Security Theorems
 
-### 1. Withdrawal Safety (Theorem 1)
-
+### Theorem 1: Withdrawal Safety
 ```lean
 theorem withdrawal_safety (vault : VaultState) (tx : Transaction) :
     tx.sender ≠ vault.owner → ¬(tx.amount > 0 ∧ vault.balance ≥ tx.amount)
 ```
+**SDK Guarantee**: Only vault owner can withdraw funds - mathematically impossible for non-owners.
 
-**SDK Guarantee**: When you create a vault using `sdk.createVault()`, only the owner can withdraw funds. Mathematically impossible for non-owners to withdraw.
-
-**Usage Example:**
-```typescript
-const vault = await sdk.createVault({
-  name: 'My Secure Vault',
-  type: 'multi-signature'
-});
-
-// Only vault owner can withdraw - mathematically proven
-await sdk.withdraw(vault.id, amount); // ✅ Safe if you're the owner
-```
-
----
-
-### 2. Balance Integrity (Theorem 2)
-
+### Theorem 2: Balance Integrity
 ```lean
 theorem balance_non_negative (vault : VaultState) (operations : List Transaction) :
     vault.balance ≥ 0
 ```
-
 **SDK Guarantee**: Vault balance can never go negative, regardless of operation sequence.
 
-**Usage Example:**
-```typescript
-const balance = await sdk.getVaultBalance(vaultId);
-// Balance is guaranteed to be >= 0 (mathematically proven)
-```
-
----
-
-### 3. Cross-Chain Consensus (Theorem 18)
-
+### Theorem 18: Trinity Protocol Consensus
 ```lean
 theorem trinity_consensus (eth sol ton : ChainState) :
     valid_operation(op) ⟹ (approved(eth, op) ∧ approved(sol, op)) ∨ 
                           (approved(eth, op) ∧ approved(ton, op)) ∨ 
                           (approved(sol, op) ∧ approved(ton, op))
 ```
-
 **SDK Guarantee**: Operations require 2-of-3 blockchain consensus (Arbitrum, Solana, TON).
 
-**Usage Example:**
-```typescript
-// Check cross-chain consensus
-const consensus = await sdk.getCrossChainConsensus(vaultId);
-console.log(consensus.approved); // 2-of-3 chains must approve
-
-// Verify Trinity Protocol
-const isValid = await sdk.verifyTrinityProtocol(
-  vaultId,
-  ethereumTxHash,
-  solanaTxHash,
-  tonTxHash
-);
-```
-
----
-
-### 4. Zero-Knowledge Privacy (Theorem 25)
-
+### Theorem 25: Zero-Knowledge Privacy
 ```lean
 theorem zk_privacy (proof : ZKProof) (verifier : Verifier) :
     verified(proof) ⟹ verifier_learns_nothing_beyond_validity(proof)
 ```
-
 **SDK Guarantee**: Zero-knowledge proofs reveal nothing beyond validity.
 
-**Usage Example:**
-```typescript
-// Create ZK proof for vault ownership
-const proof = await sdk.createZKProof(vaultId);
-
-// Verifier learns ONLY that you own the vault, nothing else
-const verified = await sdk.verifyZKProof(proof);
-```
-
----
-
-### 5. Quantum Resistance (Theorem 29)
-
+### Theorem 29: Quantum Resistance
 ```lean
 theorem quantum_resistance (kyber : ML_KEM_1024) (dilithium : Dilithium_5) :
     ∀ (shor_attack : QuantumAttack), P(break(kyber)) = negligible ∧
                                       P(break(dilithium)) = negligible
 ```
-
 **SDK Guarantee**: Quantum computer attacks have negligible success probability.
 
-**Usage Example:**
-```typescript
-// Enable quantum-resistant vault
-const vault = await sdk.createVault({
-  type: 'quantum-resistant',
-  encryption: 'ML-KEM-1024',
-  signature: 'Dilithium-5'
-});
-// Secure against quantum computers (mathematically proven)
-```
-
 ---
 
-## 🛡️ Mathematical Defense Layer (MDL)
+## 🛡️ Mathematical Defense Layer (MDL) - 7 Cryptographic Layers
 
-The SDK implements 7 cryptographic layers, all formally verified:
+All layers are **formally verified**:
 
-### 1. Zero-Knowledge Proof Engine
-- **Technology**: Groth16 protocol with Circom circuits
-- **Proof Generation**: ~5-20ms
-- **Verification**: ~2-10ms
-- **Guarantee**: Privacy-preserving verification
-
-```typescript
-await sdk.enableZKProofs(); // Uses formally verified circuits
-```
-
-### 2. Formal Verification Pipeline
-- **Coverage**: 100% (35/35 theorems proven)
-- **Tool**: Lean 4 v4.3.0 with mathlib
-- **Guarantee**: Impossible to violate under stated assumptions
-
-### 3. Multi-Party Computation (MPC)
-- **Algorithm**: 3-of-5 Shamir Secret Sharing
-- **Guarantee**: No single point of failure
-
-```typescript
-const keyShares = await sdk.generateMPCKeyShares(vaultId, 5, 3);
-// Requires 3 shares to reconstruct (mathematically proven)
-```
-
-### 4. Verifiable Delay Functions (VDF)
-- **Technology**: Wesolowski VDF with RSA-2048
-- **Guarantee**: Time-locks cannot be bypassed
-
-```typescript
-const timeLock = await sdk.createVDFTimeLock(unlockTime);
-// Provably cannot unlock early (mathematically proven)
-```
-
-### 5. AI + Cryptographic Governance
-- **Model**: AI decides, Math proves, Chain executes
-- **Guarantee**: AI cannot execute without mathematical proof
-
-### 6. Quantum-Resistant Cryptography
-- **Key Exchange**: ML-KEM-1024 (NIST FIPS 203)
-- **Signatures**: CRYSTALS-Dilithium-5
-- **Guarantee**: Secure against Shor's algorithm
-
-### 7. Trinity Protocol
-- **Architecture**: 2-of-3 consensus (Arbitrum, Solana, TON)
-- **Guarantee**: Attack probability < 10^-18
-
----
-
-## 📚 Complete Verification Documentation
-
-For full theorem proofs and technical details:
-
-- **[Complete Theorem List](https://github.com/Chronos-Vault/chronos-vault-docs/blob/main/docs/formal-verification/theorems-proven.md)** - All 35 proven theorems
-- **[Verification Report](https://github.com/Chronos-Vault/chronos-vault-docs/blob/main/docs/formal-verification/verification-report.md)** - Detailed verification results
-- **[Verify Yourself](https://github.com/Chronos-Vault/chronos-vault-docs/blob/main/docs/formal-verification/verify-yourself.md)** - Run proofs locally
+1. **Zero-Knowledge Proof Engine** - Groth16 protocol (Theorem 25)
+2. **Formal Verification Pipeline** - 100% coverage (35/35 theorems)
+3. **Multi-Party Computation** - 3-of-5 Shamir Secret Sharing (Theorem 22)
+4. **Verifiable Delay Functions** - Wesolowski VDF (Theorem 21)
+5. **AI + Cryptographic Governance** - Multi-layer validation (Theorem 32)
+6. **Quantum-Resistant Crypto** - ML-KEM-1024 + Dilithium-5 (Theorem 29)
+7. **Trinity Protocol** - 2-of-3 consensus (Theorem 18)
 
 ---
 
 ## 🚀 SDK Integration with Verified Security
 
-### Basic Setup with All Security Features
+### Basic Setup
 
 ```typescript
 import { ChronosVaultSDK } from '@chronos-vault/sdk';
@@ -224,9 +106,7 @@ const sdk = new ChronosVaultSDK({
   enableMPC: true,                // Multi-party computation (Theorem 22)
   enableVDF: true,                // Verifiable delay functions (Theorem 21)
   
-  // Security configuration
-  securityLevel: 'maximum',       // Uses all verified protocols
-  formalVerification: true        // Enforce mathematical guarantees
+  securityLevel: 'maximum'        // Uses all verified protocols
 });
 
 await sdk.initialize();
@@ -240,16 +120,22 @@ const verification = await sdk.getVerificationStatus();
 console.log(verification);
 // {
 //   totalTheorems: 35,
-//   proveTheorems: 35,
+//   provenTheorems: 35,
 //   coverage: '100%',
 //   proofSystem: 'Lean 4 v4.3.0',
 //   status: 'FULLY_VERIFIED'
 // }
-
-// Verify specific theorem
-const isProven = await sdk.verifyTheorem('withdrawal_safety');
-// Returns: true (mathematically proven)
 ```
+
+---
+
+## 📚 Complete Documentation
+
+For full theorem proofs and technical details:
+
+- **[Platform Documentation](https://github.com/Chronos-Vault/chronos-vault-docs)** - Technical docs
+- **[Security Repository](https://github.com/Chronos-Vault/chronos-vault-security)** - Formal proofs
+- **[Smart Contracts](https://github.com/Chronos-Vault/chronos-vault-contracts)** - Verified contracts
 
 ---
 
@@ -259,50 +145,11 @@ const isProven = await sdk.verifyTheorem('withdrawal_safety');
 - ❌ "We didn't find any bugs"
 - ❌ Based on human review
 - ❌ Can miss edge cases
-- ❌ Trust-based assurance
 
 ### Formal Verification (Chronos Vault SDK)
 - ✅ "These bugs are mathematically impossible"
 - ✅ Based on mathematical proofs
 - ✅ Covers all possible cases
-- ✅ Zero-trust verification
-
----
-
-## 📖 Resources for Developers
-
-### Learn More
-- [Formal Verification Guide](https://github.com/Chronos-Vault/chronos-vault-docs) - Complete documentation
-- [Mathematical Defense Layer](https://github.com/Chronos-Vault/chronos-vault-security) - Security architecture
-- [Lean 4 Proofs](https://github.com/Chronos-Vault/chronos-vault-security/tree/main/formal-proofs) - View proof code
-
-### Run Proofs Locally
-```bash
-# Clone security repository
-git clone https://github.com/Chronos-Vault/chronos-vault-security.git
-cd chronos-vault-security/formal-proofs
-
-# Install Lean 4
-curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -sSf | sh
-
-# Verify all theorems
-lake build
-# Output: ✅ All 35 theorems verified
-```
-
----
-
-## ✅ Verification Checklist for SDK Users
-
-When integrating the SDK, you can verify:
-
-- [ ] All 35 theorems are proven (check verification status)
-- [ ] Smart contract operations use verified logic
-- [ ] Zero-knowledge proofs are circuit-verified
-- [ ] Quantum-resistant crypto uses NIST standards
-- [ ] Trinity Protocol enforces 2-of-3 consensus
-- [ ] MPC key management uses proven threshold schemes
-- [ ] VDF time-locks are non-bypassable
 
 ---
 
@@ -312,6 +159,6 @@ When integrating the SDK, you can verify:
 
 **Chronos Vault SDK: The world's first fully verified multi-chain security platform**
 
-[View All Theorems](https://github.com/Chronos-Vault/chronos-vault-docs/blob/main/docs/formal-verification/theorems-proven.md) • [Security Architecture](https://github.com/Chronos-Vault/chronos-vault-security) • [SDK Documentation](./README.md)
+[View All Theorems](https://github.com/Chronos-Vault/chronos-vault-docs) • [Security Architecture](https://github.com/Chronos-Vault/chronos-vault-security) • [SDK Documentation](./README.md)
 
 </div>
