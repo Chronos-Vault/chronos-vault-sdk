@@ -18,7 +18,7 @@ The Chronos Vault Developer Portal provides comprehensive tools, documentation, 
 
 | Page | URL | Description |
 |------|-----|-------------|
-| **API Overview** | https://chronosvault.org/api-overview | Interactive API landing page with live examples |
+| **API Overview** | https://chronosvault.org/api-documentation | Interactive API landing page with live examples |
 | **API Documentation** | https://chronosvault.org/api-documentation | Complete REST API reference |
 | **Developer Portal** | https://chronosvault.org/developer-portal | Main developer hub |
 | **SDK Documentation** | https://chronosvault.org/sdk-documentation | Complete SDK reference |
@@ -54,9 +54,9 @@ The Chronos Vault Developer Portal provides comprehensive tools, documentation, 
 
 Chronos Vault provides two types of API resources:
 
-**1. API Overview Page** (for browsing)
+**1. API Documentation** (for browsing)
 ```
-Visit: https://chronosvault.org/api-overview
+Visit: https://chronosvault.org/api-documentation
 ```
 Interactive landing page showcasing:
 - Trinity Protocol architecture
@@ -234,7 +234,7 @@ const V3_CONTRACTS = {
 ## 📖 Documentation Resources
 
 ### SDK & Integration
-- **[API Overview](https://chronosvault.org/api-overview)** - Interactive API landing page
+- **[API Overview](https://chronosvault.org/api-documentation)** - Interactive API landing page
 - **[API Documentation](https://chronosvault.org/api-documentation)** - REST API reference
 - **[SDK Documentation](https://chronosvault.org/sdk-documentation)** - Complete SDK reference
 - **[Integration Guide](https://chronosvault.org/integration-guide)** - Step-by-step guide
@@ -283,6 +283,6 @@ Visit **[Developer API Keys](https://chronosvault.org/developer-api-keys)** to g
 
 **Trinity Protocol • 7 Cryptographic Layers • 35/35 Theorems Proven**
 
-[API Overview](https://chronosvault.org/api-overview) • [API Docs](https://chronosvault.org/api-documentation) • [Trinity Protocol](https://chronosvault.org/trinity-protocol)
+[API Overview](https://chronosvault.org/api-documentation) • [API Docs](https://chronosvault.org/api-documentation) • [Trinity Protocol](https://chronosvault.org/trinity-protocol)
 
 </div>
