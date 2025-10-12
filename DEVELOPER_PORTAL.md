@@ -59,7 +59,7 @@ The Chronos Vault API is served from the **same domain** as the platform:
 const API_BASE = 'https://chronosvault.org/api';
 
 // ❌ WRONG - No separate api subdomain
-// const API_BASE = 'https://api.chronosvault.org';
+// const API_BASE = 'https://chronosvault.org/api';
 ```
 
 ### **Production API**
