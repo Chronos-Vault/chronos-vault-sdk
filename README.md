@@ -2,7 +2,7 @@
 
 <div align="center">
 
-**Official TypeScript/JavaScript SDK for Trinity Protocol v3.0 - Mathematically Provable Multi-Chain Security**
+**Official TypeScript/JavaScript SDK for Trinity Protocol v3.1 - Mathematically Provable Multi-Chain Security**
 
 ![npm version](https://img.shields.io/badge/npm-3.0.0-blue?style=for-the-badge&logo=npm)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.0-3178C6?style=for-the-badge&logo=typescript)
@@ -36,7 +36,7 @@
 
 The official TypeScript/JavaScript SDK for integrating Chronos Vault's mathematically provable security into your applications. Build with confidence knowing every security claim is backed by formal verification.
 
-### Trinity Protocol v3.0
+### Trinity Protocol v3.1
 
 - ✅ **78/78 Lean 4 formal proofs complete** (100%)
 - ✅ **All 4 critical vulnerabilities fixed**
@@ -495,13 +495,13 @@ ChronosVaultClient client = new ChronosVaultClient(
 
 ---
 
-## 📍 Deployed Contracts (Trinity Protocol v3.0)
+## 📍 Deployed Contracts (Trinity Protocol v3.1)
 
 ### Arbitrum Sepolia
 
 | Contract | Address |
 |----------|---------|
-| CrossChainBridgeOptimized v2.2 | `0x4a8Bc58f441Ae7E7eC2879e434D9D7e31CF80e30` |
+| CrossChainBridgeOptimized v2.2 | `0x3E205dc9881Cf0E9377683aDd22bC1aBDBdF462D` |
 | HTLCBridge v2.0 | `0x6cd3B1a72F67011839439f96a70290051fd66D57` |
 | ChronosVault | `0x99444B0B1d6F7b21e9234229a2AC2bC0150B9d91` |
 | CVT Token | `0xFb419D8E32c14F774279a4dEEf330dc893257147` |
