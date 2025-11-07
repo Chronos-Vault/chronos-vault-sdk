@@ -1,0 +1,23 @@
+{
+  "name": "Chronos Vault SDK - Network Configuration",
+  "version": "3.5.9",
+  "networks": {
+    "arbitrum-sepolia": {
+      "chainId": 421614,
+      "name": "Arbitrum Sepolia",
+      "rpcUrl": "https://sepolia-rollup.arbitrum.io/rpc",
+      "explorer": "https://sepolia.arbiscan.io",
+      "contracts": {
+        "TrinityConsensusVerifier": {
+          "address": "0xcb56CD751453d15adc699b5D4DED8EC02D725AEB",
+          "version": "3.5.4"
+        },
+        "HTLCChronosBridge": {
+          "address": "0xbaC4f0283Fa9542c01CAA086334AEc33F86a7839",
+          "version": "3.5.9"
+        }
+      }
+    }
+  },
+  "lastUpdated": "2025-11-07T17:30:02.127Z"
+}
