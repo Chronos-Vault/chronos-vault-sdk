@@ -1,71 +1,72 @@
 /**
- * Chronos Vault SDK
+ * @chronos-vault/sdk
  * 
- * Professional TypeScript client library for interacting with Chronos Vault's
- * Mathematical Defense Layer
+ * Official TypeScript/JavaScript SDK for Chronos Vault and Trinity Protocol
+ * 
+ * Trinity Protocol provides mathematically provable 2-of-3 consensus verification
+ * across Arbitrum, Solana, and TON blockchains.
+ * 
+ * @packageDocumentation
  */
 
-export interface ChronosVaultConfig {
-  apiUrl: string;
-  websocketUrl: string;
-  apiKey?: string;
-}
+export * from './types';
+export * from './constants';
+export * from './trinity';
+export * from './htlc';
+export * from './vault';
+export * from './bridge';
 
-export interface VaultCreateRequest {
-  vaultType: string;
-  securityLevel: string;
-  enableQuantumResistant: boolean;
-  chainPreference: string;
-}
+import { TrinityProtocolClient } from './trinity';
+import { HTLCClient } from './htlc';
+import { VaultClient } from './vault';
+import { BridgeClient } from './bridge';
+import { ChronosVaultConfig, DEFAULT_CONFIG } from './types';
 
-export class ChronosVaultClient {
+/**
+ * Main Chronos Vault SDK class
+ * Provides unified access to all protocol features
+ */
+export class ChronosVaultSDK {
+  public readonly trinity: TrinityProtocolClient;
+  public readonly htlc: HTLCClient;
+  public readonly vault: VaultClient;
+  public readonly bridge: BridgeClient;
+  
   private config: ChronosVaultConfig;
-  private ws?: WebSocket;
 
-  constructor(config: ChronosVaultConfig) {
-    this.config = config;
-  }
-
-  /**
-   * Create a new vault with Mathematical Defense Layer validation
-   */
-  async createVault(request: VaultCreateRequest): Promise<any> {
-    const response = await fetch(`${this.config.apiUrl}/api/vault/create`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        ...(this.config.apiKey && { 'Authorization': `Bearer ${this.config.apiKey}` })
-      },
-      body: JSON.stringify(request)
-    });
-    return response.json();
-  }
-
-  /**
-   * Subscribe to real-time MDL updates
-   */
-  subscribe(event: string, callback: (data: any) => void): void {
-    if (!this.ws) {
-      this.ws = new WebSocket(this.config.websocketUrl);
-    }
+  constructor(config: Partial<ChronosVaultConfig> = {}) {
+    this.config = { ...DEFAULT_CONFIG, ...config };
     
-    this.ws.addEventListener('message', (msg) => {
-      const data = JSON.parse(msg.data);
-      if (data.type === event) {
-        callback(data);
-      }
-    });
+    this.trinity = new TrinityProtocolClient(this.config);
+    this.htlc = new HTLCClient(this.config);
+    this.vault = new VaultClient(this.config);
+    this.bridge = new BridgeClient(this.config);
   }
 
   /**
-   * Disconnect WebSocket
+   * Get the current SDK configuration
    */
-  disconnect(): void {
-    if (this.ws) {
-      this.ws.close();
-      this.ws = undefined;
-    }
+  getConfig(): ChronosVaultConfig {
+    return { ...this.config };
+  }
+
+  /**
+   * Update SDK configuration
+   */
+  updateConfig(config: Partial<ChronosVaultConfig>): void {
+    this.config = { ...this.config, ...config };
+    this.trinity.updateConfig(this.config);
+    this.htlc.updateConfig(this.config);
+    this.vault.updateConfig(this.config);
+    this.bridge.updateConfig(this.config);
+  }
+
+  /**
+   * Get SDK version
+   */
+  static get version(): string {
+    return '1.0.0';
   }
 }
 
-export default ChronosVaultClient;
+export default ChronosVaultSDK;
