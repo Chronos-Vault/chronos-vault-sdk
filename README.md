@@ -187,4 +187,4 @@ MIT License - see [LICENSE](LICENSE) for details.
 
 ---
 
-*Built with ❤️ by the Chronos Vault Team*
+*Built by Chronos Vault Team*
