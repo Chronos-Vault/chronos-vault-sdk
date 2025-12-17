@@ -4,6 +4,10 @@ Official TypeScript/JavaScript SDK for **Chronos Vault** and **Trinity Protocol*
 
 Trinity Protocol provides mathematically provable 2-of-3 consensus verification across Arbitrum, Solana, and TON blockchains.
 
+## v1.1.0 - Direct RPC Integration
+
+**New in v1.1.0:** Dual-mode operation supporting both API client and direct RPC connections to blockchain networks.
+
 ## Installation
 
 ```bash
@@ -149,16 +153,63 @@ const transfer = await sdk.bridge.transfer({
 
 ## Configuration
 
+### API Mode (Default)
 ```typescript
 const sdk = new ChronosVaultSDK({
   network: 'testnet',           // 'testnet' or 'mainnet'
   apiBaseUrl: 'https://api.chronosvault.org',
   apiKey: 'your-api-key',       // Optional
-  arbitrumRpcUrl: 'https://...', // Optional custom RPC
-  solanaRpcUrl: 'https://...',
-  tonRpcUrl: 'https://...',
   timeout: 30000,               // Request timeout in ms
 });
+```
+
+### RPC Mode (Direct Blockchain Access)
+```typescript
+import { ChronosVaultSDK } from '@chronos-vault/sdk';
+
+const sdk = new ChronosVaultSDK({
+  mode: 'rpc',
+  rpc: {
+    arbitrum: {
+      rpcUrl: 'https://arb-sepolia.g.alchemy.com/v2/YOUR_KEY',
+      privateKey: '0x...'  // For write operations
+    },
+    solana: {
+      rpcUrl: 'https://api.devnet.solana.com',
+      privateKey: '...'    // Base58 encoded
+    },
+    ton: {
+      rpcUrl: 'https://testnet.toncenter.com/api/v2/jsonRPC',
+      mnemonic: ['word1', 'word2', ...] // 24-word mnemonic
+    }
+  }
+});
+
+// Direct on-chain operations
+const result = await sdk.trinity.rpc.verifyConsensus(operationId);
+```
+
+## RPC Clients
+
+### TrinityRPCClient
+```typescript
+import { TrinityRPCClient } from '@chronos-vault/sdk/trinity/rpc';
+const client = new TrinityRPCClient(arbitrumProvider);
+await client.verifyConsensus(operationId);
+```
+
+### HTLCRPCClient
+```typescript
+import { HTLCRPCClient } from '@chronos-vault/sdk/htlc/rpc';
+const client = new HTLCRPCClient(arbitrumProvider);
+await client.createSwap(recipient, hashlock, timelock, amount);
+```
+
+### VaultRPCClient
+```typescript
+import { VaultRPCClient } from '@chronos-vault/sdk/vault/rpc';
+const client = new VaultRPCClient(arbitrumProvider);
+await client.deposit(amount);
 ```
 
 ## The 8 Mathematical Defense Layers
@@ -187,4 +238,4 @@ MIT License - see [LICENSE](LICENSE) for details.
 
 ---
 
-*Built by Chronos Vault Team*
+*Built with ❤️ by the Chronos Vault Team*

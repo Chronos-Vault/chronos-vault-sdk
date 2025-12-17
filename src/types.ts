@@ -5,6 +5,27 @@
 export type ChainId = 'arbitrum' | 'solana' | 'ton';
 export type NetworkType = 'mainnet' | 'testnet';
 
+export type SDKMode = 'api' | 'rpc' | 'hybrid';
+
+export interface RPCConfig {
+  arbitrum?: {
+    rpcUrl: string;
+    privateKey?: string;
+    chainId?: number;
+  };
+  solana?: {
+    rpcUrl: string;
+    privateKey?: string;
+    commitment?: 'processed' | 'confirmed' | 'finalized';
+  };
+  ton?: {
+    endpoint: string;
+    apiKey?: string;
+    mnemonic?: string;
+    network?: 'mainnet' | 'testnet';
+  };
+}
+
 export interface ChronosVaultConfig {
   network: NetworkType;
   apiBaseUrl: string;
@@ -13,12 +34,30 @@ export interface ChronosVaultConfig {
   tonRpcUrl?: string;
   apiKey?: string;
   timeout?: number;
+  mode?: SDKMode;
+  rpc?: RPCConfig;
 }
 
 export const DEFAULT_CONFIG: ChronosVaultConfig = {
   network: 'testnet',
   apiBaseUrl: 'https://api.chronosvault.org',
   timeout: 30000,
+  mode: 'api',
+};
+
+export const TESTNET_RPC_CONFIG: RPCConfig = {
+  arbitrum: {
+    rpcUrl: 'https://arb-sepolia.g.alchemy.com/v2/demo',
+    chainId: 421614
+  },
+  solana: {
+    rpcUrl: 'https://api.devnet.solana.com',
+    commitment: 'confirmed'
+  },
+  ton: {
+    endpoint: 'https://testnet.toncenter.com/api/v2/jsonRPC',
+    network: 'testnet'
+  }
 };
 
 export interface Validator {

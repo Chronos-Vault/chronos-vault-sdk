@@ -15,16 +15,24 @@ export * from './trinity';
 export * from './htlc';
 export * from './vault';
 export * from './bridge';
+export * from './errors';
+export * from './providers';
+export * from './abis';
 
 import { TrinityProtocolClient } from './trinity';
 import { HTLCClient } from './htlc';
 import { VaultClient } from './vault';
 import { BridgeClient } from './bridge';
-import { ChronosVaultConfig, DEFAULT_CONFIG } from './types';
+import { TrinityRPCClient } from './trinity/rpc';
+import { HTLCRPCClient } from './htlc/rpc';
+import { VaultRPCClient } from './vault/rpc';
+import { MultiChainProvider } from './providers';
+import { ChronosVaultConfig, DEFAULT_CONFIG, SDKMode, RPCConfig } from './types';
 
 /**
  * Main Chronos Vault SDK class
  * Provides unified access to all protocol features
+ * Supports both REST API and direct RPC modes
  */
 export class ChronosVaultSDK {
   public readonly trinity: TrinityProtocolClient;
@@ -32,15 +40,53 @@ export class ChronosVaultSDK {
   public readonly vault: VaultClient;
   public readonly bridge: BridgeClient;
   
+  public trinityRPC?: TrinityRPCClient;
+  public htlcRPC?: HTLCRPCClient;
+  public vaultRPC?: VaultRPCClient;
+  public providers?: MultiChainProvider;
+  
   private config: ChronosVaultConfig;
+  private mode: SDKMode;
 
   constructor(config: Partial<ChronosVaultConfig> = {}) {
     this.config = { ...DEFAULT_CONFIG, ...config };
+    this.mode = this.config.mode || 'api';
     
     this.trinity = new TrinityProtocolClient(this.config);
     this.htlc = new HTLCClient(this.config);
     this.vault = new VaultClient(this.config);
     this.bridge = new BridgeClient(this.config);
+
+    if ((this.mode === 'rpc' || this.mode === 'hybrid') && this.config.rpc) {
+      this.initializeRPCClients(this.config.rpc);
+    }
+  }
+
+  private initializeRPCClients(rpcConfig: RPCConfig): void {
+    this.providers = new MultiChainProvider(rpcConfig);
+    
+    if (rpcConfig.arbitrum || rpcConfig.solana || rpcConfig.ton) {
+      this.trinityRPC = new TrinityRPCClient(rpcConfig);
+    }
+    
+    if (rpcConfig.arbitrum) {
+      this.htlcRPC = new HTLCRPCClient(rpcConfig);
+      this.vaultRPC = new VaultRPCClient(rpcConfig);
+    }
+  }
+
+  /**
+   * Check if RPC mode is enabled
+   */
+  isRPCEnabled(): boolean {
+    return this.mode === 'rpc' || this.mode === 'hybrid';
+  }
+
+  /**
+   * Get the current SDK mode
+   */
+  getMode(): SDKMode {
+    return this.mode;
   }
 
   /**
@@ -59,14 +105,45 @@ export class ChronosVaultSDK {
     this.htlc.updateConfig(this.config);
     this.vault.updateConfig(this.config);
     this.bridge.updateConfig(this.config);
+    
+    if (config.mode) {
+      this.mode = config.mode;
+    }
+    
+    if (config.rpc && this.isRPCEnabled()) {
+      this.initializeRPCClients(config.rpc);
+    }
+  }
+
+  /**
+   * Get multi-chain connection status
+   */
+  async getChainStatus(): Promise<{
+    arbitrum: { connected: boolean; blockNumber?: number };
+    solana: { connected: boolean; slot?: number };
+    ton: { connected: boolean };
+  }> {
+    if (this.trinityRPC) {
+      return this.trinityRPC.getMultiChainStatus();
+    }
+    
+    return {
+      arbitrum: { connected: false },
+      solana: { connected: false },
+      ton: { connected: false }
+    };
   }
 
   /**
    * Get SDK version
    */
   static get version(): string {
-    return '1.0.0';
+    return '1.1.0';
   }
 }
+
+export { TrinityRPCClient } from './trinity/rpc';
+export { HTLCRPCClient } from './htlc/rpc';
+export { VaultRPCClient } from './vault/rpc';
 
 export default ChronosVaultSDK;
