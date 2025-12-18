@@ -4,20 +4,7 @@
  */
 
 import { Contract, Wallet, JsonRpcProvider, formatEther, parseEther } from 'ethers';
-
-export class SDKError extends Error {
-  constructor(message: string) {
-    super(message);
-    this.name = 'SDKError';
-  }
-}
-
-export class ProviderError extends Error {
-  constructor(message: string, public chain: string, public originalError?: any) {
-    super(message);
-    this.name = 'ProviderError';
-  }
-}
+import { SDKError, ProviderError } from '../errors';
 
 export interface ArbitrumProviderConfig {
   rpcUrl: string;
