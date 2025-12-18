@@ -150,6 +150,7 @@ const transfer = await sdk.bridge.transfer({
 |----------|---------|
 | TrinityConsensus | `EQeGlYzwupSROVWGucOmKyUDbSaKmPfIpHHP5mV73odL8` |
 | ChronosVault | `EQjUVidQfn4m-Rougn0fol7ECCthba2HV0M6xz9zAfax4` |
+| CrossChainBridge | `EQgWobA9D4u6Xem3B8e6Sde_NEFZYicyy7_5_XvOT18mA` |
 
 ## Configuration
 
@@ -210,6 +211,45 @@ await client.createSwap(recipient, hashlock, timelock, amount);
 import { VaultRPCClient } from '@chronos-vault/sdk/vault/rpc';
 const client = new VaultRPCClient(arbitrumProvider);
 await client.deposit(amount);
+```
+
+### BridgeRPCClient
+```typescript
+import { BridgeRPCClient } from '@chronos-vault/sdk/bridge/rpc';
+const client = new BridgeRPCClient(rpcConfig);
+
+// Get message fee for cross-chain transfer
+const fee = await client.getMessageFee('solana');
+
+// Send cross-chain message
+const { txHash, messageId } = await client.sendMessage('solana', recipient, data);
+
+// Check message status
+const status = await client.getMessageStatus(messageId);
+
+// Initiate exit from Arbitrum
+const { exitId } = await client.initiateExit(tokenAddress, amount, 'ton', recipient);
+
+// Get pending exits
+const exits = await client.getPendingExits(userAddress);
+```
+
+## Error Handling
+
+```typescript
+import { SDKError, ProviderError, ConsensusError } from '@chronos-vault/sdk';
+
+try {
+  await sdk.trinity.submitConsensusOperation({ ... });
+} catch (error) {
+  if (error instanceof ConsensusError) {
+    console.log('Consensus failed:', error.confirmations, 'of 2 required');
+  } else if (error instanceof ProviderError) {
+    console.log('Chain error on:', error.chain);
+  } else if (error instanceof SDKError) {
+    console.log('SDK error:', error.code, error.message);
+  }
+}
 ```
 
 ## The 8 Mathematical Defense Layers
