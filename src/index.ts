@@ -22,7 +22,7 @@ export * from './abis';
 import { TrinityProtocolClient } from './trinity';
 import { HTLCClient } from './htlc';
 import { VaultClient } from './vault';
-import { BridgeClient } from './bridge';
+import { BridgeClient, BridgeRPCClient } from './bridge';
 import { TrinityRPCClient } from './trinity/rpc';
 import { HTLCRPCClient } from './htlc/rpc';
 import { VaultRPCClient } from './vault/rpc';
@@ -43,6 +43,7 @@ export class ChronosVaultSDK {
   public trinityRPC?: TrinityRPCClient;
   public htlcRPC?: HTLCRPCClient;
   public vaultRPC?: VaultRPCClient;
+  public bridgeRPC?: BridgeRPCClient;
   public providers?: MultiChainProvider;
   
   private config: ChronosVaultConfig;
@@ -72,6 +73,7 @@ export class ChronosVaultSDK {
     if (rpcConfig.arbitrum) {
       this.htlcRPC = new HTLCRPCClient(rpcConfig);
       this.vaultRPC = new VaultRPCClient(rpcConfig);
+      this.bridgeRPC = new BridgeRPCClient(rpcConfig);
     }
   }
 
