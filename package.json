@@ -1,7 +1,7 @@
 {
   "name": "@chronos-vault/sdk",
-  "version": "1.0.0",
-  "description": "Official TypeScript/JavaScript SDK for Chronos Vault and Trinity Protocol",
+  "version": "1.1.0",
+  "description": "Official SDK for Chronos Vault and Trinity Protocol - Multi-chain consensus verification across Arbitrum, Solana, and TON",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
@@ -39,9 +39,13 @@
   ],
   "scripts": {
     "build": "tsup src/index.ts --format cjs,esm --dts --clean",
+    "build:watch": "tsup src/index.ts --format cjs,esm --dts --watch",
     "dev": "tsup src/index.ts --format cjs,esm --dts --watch",
     "lint": "eslint src --ext .ts",
-    "test": "vitest",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "typecheck": "tsc --noEmit",
     "prepublishOnly": "npm run build"
   },
   "keywords": [
