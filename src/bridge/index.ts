@@ -14,6 +14,8 @@ import {
 } from '../types';
 import { CONTRACTS } from '../constants';
 
+export * from './rpc';
+
 export interface TransferParams {
   sourceChain: ChainId;
   targetChain: ChainId;
@@ -158,13 +160,17 @@ export class BridgeClient {
     ton: string;
   } {
     const network = this.config.network;
+    const arbContracts = CONTRACTS.arbitrum[network] as Record<string, string>;
+    const solContracts = CONTRACTS.solana[network] as Record<string, string>;
+    const tonContracts = CONTRACTS.ton[network] as Record<string, string>;
+    
     return {
       arbitrum: {
-        relay: CONTRACTS.arbitrum[network]?.CrossChainMessageRelay || '',
-        exit: CONTRACTS.arbitrum[network]?.TrinityExitGateway || '',
+        relay: arbContracts?.CrossChainMessageRelay || '',
+        exit: arbContracts?.TrinityExitGateway || '',
       },
-      solana: CONTRACTS.solana[network]?.BridgeProgram || '',
-      ton: CONTRACTS.ton[network]?.CrossChainBridge || '',
+      solana: solContracts?.BridgeProgram || '',
+      ton: tonContracts?.CrossChainBridge || '',
     };
   }
 
