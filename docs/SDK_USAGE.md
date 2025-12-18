@@ -727,4 +727,4 @@ The SDK follows semantic versioning (MAJOR.MINOR.PATCH).
 
 ## Support
 
-For SDK support, please contact us at chronosvaultt@chronosvault.org or visit our [developer forum]([https://developers.chronosvault.org](https://chronosvault.org/developer-portal)).
+For SDK support, please contact us at sdk-support@chronosvault.org or visit our [developer forum](https://developers.chronosvault.org).
