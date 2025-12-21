@@ -176,7 +176,7 @@ For security vulnerabilities, please email chronosvault@chronosvault.org instead
 
 - Open a GitHub Discussion
 - Check existing issues
-- Read the documentation at [https://docs.chronosvault.org](https://chronosvault.org/developer-portal)
+- Read the documentation at [https://developer-portal.chronosvault.org](https://chronosvault.org/developer-portal)
 
 ## License
 
