@@ -1,20 +1,28 @@
-# Source files
+# Source files (we publish dist/)
 src/
-tsconfig.json
-*.spec.ts
-*.test.ts
-
-# Development files
-.vscode/
-.idea/
+tests/
 examples/
-docs/
 
-# Build config
-.gitignore
-.prettierrc
-.eslintrc
-jest.config.js
+# Config files
+tsconfig.json
+vitest.config.ts
+.eslintrc*
+.prettierrc*
 
-# CI/CD
+# Development
+.git/
 .github/
+.idea/
+.vscode/
+coverage/
+
+# Documentation (keep README)
+docs/
+CONTRIBUTING.md
+CHANGELOG.md
+
+# Misc
+*.test.ts
+*.spec.ts
+*.map
+.DS_Store
