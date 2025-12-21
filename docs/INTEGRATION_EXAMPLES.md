@@ -1,13 +1,13 @@
-<!-- Chronos Vault - Trinity Protocol™ -->
-# 🔗 Chronos Vault - Integration Examples & Code Samples
+<!-- Chronos Vault - Trinity Protocol -->
+# Chronos Vault - Integration Examples & Code Samples
 
-**Last Updated:** October 2025  
-**Platform Version:** 1.0.0  
-**Supported Languages:** TypeScript, JavaScript, Python, Rust, Java
+**Last Updated:** December 2025  
+**SDK Version:** 1.1.0  
+**Supported Languages:** TypeScript, JavaScript
 
 ---
 
-This comprehensive guide provides production-ready code examples for integrating Chronos Vault's multi-chain security platform into your applications. All examples feature Trinity Protocol™ consensus, quantum-resistant encryption, and zero-knowledge privacy.
+This guide provides production-ready code examples for integrating Chronos Vault's multi-chain security platform into your applications. All examples feature Trinity Protocol 2-of-3 consensus across Arbitrum, Solana, and TON.
 
 ## Table of Contents
 
@@ -29,20 +29,22 @@ This example shows how to integrate Chronos Vault into a React.js application us
 ```tsx
 // components/ChronosAuth.tsx
 import { useState, useEffect } from 'react';
-import { ChronosVaultClient } from '@chronos-vault/sdk';
-import { useWeb3React } from '@web3-react/core';
+import { ChronosVaultSDK } from '@chronos-vault/sdk';
 
-export default function ChronosAuth({ onAuthComplete }) {
-  const { account, library } = useWeb3React();
+export default function ChronosAuth({ account, onAuthComplete }) {
   const [authStatus, setAuthStatus] = useState('idle');
-  const [client, setClient] = useState(null);
+  const [sdk, setSdk] = useState(null);
 
   useEffect(() => {
-    if (account && library) {
+    if (account) {
       setAuthStatus('authenticating');
       
-      const chronosClient = new ChronosVaultClient({
-        wallet: {
+      const chronosSDK = new ChronosVaultSDK({
+        network: 'testnet',
+        mode: 'hybrid',
+        apiBaseUrl: process.env.NEXT_PUBLIC_CHRONOS_API || 'https://testnet.chronosvault.org/api',
+        rpc: {
+          arbitrum: {
           type: 'ethereum',
           provider: library.provider
         },
@@ -381,7 +383,7 @@ npm install @chronos-vault/sdk-react-native react-native-crypto
 // screens/VaultDashboard.js
 import React, { useState, useEffect } from 'react';
 import { View, Text, FlatList, TouchableOpacity, StyleSheet, ActivityIndicator } from 'react-native';
-import { ChronosVaultClient } from '@chronos-vault/sdk-react-native';
+import { ChronosVaultSDK } from '@chronos-vault/sdk-react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const VaultDashboard = ({ navigation, route }) => {
@@ -400,7 +402,7 @@ const VaultDashboard = ({ navigation, route }) => {
           throw new Error('API key not found');
         }
         
-        const client = new ChronosVaultClient({
+        const client = new ChronosVaultSDK({
           apiKey,
           environment: 'production'
         });
@@ -851,7 +853,7 @@ This example shows how to integrate Chronos Vault into an enterprise Java applic
 // src/main/java/com/example/enterprise/config/ChronosVaultConfig.java
 package com.example.enterprise.config;
 
-import org.chronosvault.ChronosVaultClient;
+import org.chronosvault.ChronosVaultSDK;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -866,8 +868,8 @@ public class ChronosVaultConfig {
     private String environment;
     
     @Bean
-    public ChronosVaultClient chronosVaultClient() {
-        return new ChronosVaultClient.Builder()
+    public ChronosVaultSDK chronosVaultClient() {
+        return new ChronosVaultSDK.Builder()
                 .withApiKey(apiKey)
                 .withEnvironment(environment)
                 .build();
@@ -881,7 +883,7 @@ public class ChronosVaultConfig {
 // src/main/java/com/example/enterprise/service/SecurityVaultService.java
 package com.example.enterprise.service;
 
-import org.chronosvault.ChronosVaultClient;
+import org.chronosvault.ChronosVaultSDK;
 import org.chronosvault.model.Vault;
 import org.chronosvault.model.VaultCreationRequest;
 import org.chronosvault.model.VaultVerification;
@@ -896,10 +898,10 @@ import java.util.Map;
 @Service
 public class SecurityVaultService {
 
-    private final ChronosVaultClient chronosVaultClient;
+    private final ChronosVaultSDK chronosVaultClient;
     
     @Autowired
-    public SecurityVaultService(ChronosVaultClient chronosVaultClient) {
+    public SecurityVaultService(ChronosVaultSDK chronosVaultClient) {
         this.chronosVaultClient = chronosVaultClient;
     }
     
@@ -1062,7 +1064,7 @@ from fastapi import FastAPI, HTTPException, Depends, Header
 from fastapi.security import APIKeyHeader
 from pydantic import BaseModel
 from typing import List, Optional
-from chronos_vault_sdk import ChronosVaultClient
+from chronos_vault_sdk import ChronosVaultSDK
 from chronos_vault_sdk.exceptions import ChronosVaultException
 
 app = FastAPI(title="Cross-Chain Transfer API")
@@ -1072,7 +1074,7 @@ API_KEY_NAME = "X-API-Key"
 api_key_header = APIKeyHeader(name=API_KEY_NAME)
 
 # Initialize Chronos Vault client
-chronos_client = ChronosVaultClient(
+chronos_client = ChronosVaultSDK(
     api_key=os.environ.get("CHRONOS_API_KEY"),
     environment="production"
 )
@@ -1196,7 +1198,7 @@ npm install @chronos-vault/sdk express dotenv joi jsonwebtoken
 ```javascript
 // server.js
 const express = require('express');
-const { ChronosVaultClient } = require('@chronos-vault/sdk');
+const { ChronosVaultSDK } = require('@chronos-vault/sdk');
 const jwt = require('jsonwebtoken');
 const Joi = require('joi');
 const dotenv = require('dotenv');
@@ -1207,7 +1209,7 @@ const app = express();
 app.use(express.json());
 
 // Initialize Chronos Vault client
-const chronosClient = new ChronosVaultClient({
+const chronosClient = new ChronosVaultSDK({
   apiKey: process.env.CHRONOS_API_KEY,
   environment: process.env.NODE_ENV === 'production' ? 'production' : 'testnet'
 });
