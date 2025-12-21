@@ -1,32 +1,53 @@
-<!-- Chronos Vault - Trinity Protocol™ -->
-# 🔐 Chronos Vault - Wallet Integration API
+# Chronos Vault - Wallet Integration API
 
-**Version:** 1.0.0  
-**Last Updated:** October 2025  
-**Protocol:** Trinity Protocol™ Multi-Chain Security
-
----
-
-## 🌟 Overview
-
-The Chronos Vault Wallet Integration API provides secure, production-ready endpoints for external wallet applications to leverage our **Trinity Protocol™** security system. Enable your wallet users to benefit from:
-
-- ✅ **Multi-chain verification** across Ethereum L2, Solana, and TON
-- ✅ **AI-powered threat monitoring** with real-time security alerts
-- ✅ **Mathematical security guarantees** through formal verification
-- ✅ **Zero-knowledge privacy** for confidential transactions
-- ✅ **Quantum-resistant cryptography** for future-proof security
+**Version:** 1.1.0  
+**Last Updated:** December 2025  
+**Protocol:** Trinity Protocol Multi-Chain Security
 
 ---
 
-## 📋 Table of Contents
+## Overview
 
-- [Authentication & Authorization](#authentication--authorization)
-- [Vault Management](#vault-management)
-- [Trinity Protocol™ Integration](#trinity-protocol-integration)
-- [Security Monitoring](#security-monitoring)
-- [WebSocket Events](#websocket-events)
-- [Error Handling](#error-handling)
+The Chronos Vault Wallet Integration API provides secure endpoints for external wallet applications to leverage our Trinity Protocol security system. Enable your wallet users to benefit from:
+
+- Multi-chain verification across Arbitrum, Solana, and TON
+- AI-powered threat monitoring with real-time security alerts
+- Mathematical security guarantees through formal verification
+- Zero-knowledge privacy for confidential transactions
+- Quantum-resistant cryptography for future-proof security
+
+---
+
+## Quick Start
+
+### 1. Install SDK
+
+```bash
+npm install @chronos-vault/sdk
+```
+
+### 2. Initialize Client
+
+```typescript
+import { ChronosVaultSDK } from '@chronos-vault/sdk';
+
+const sdk = new ChronosVaultSDK({
+  network: 'testnet',
+  apiBaseUrl: 'https://testnet.chronosvault.org/api',
+  apiKey: 'your-api-key',
+});
+```
+
+### 3. Connect User Wallet
+
+```typescript
+// Authenticate user
+const session = await sdk.trinity.authenticate({
+  walletAddress: userAddress,
+  signature: signedMessage,
+  chain: 'arbitrum',
+});
+```
 
 ---
 
@@ -34,7 +55,8 @@ The Chronos Vault Wallet Integration API provides secure, production-ready endpo
 
 ### Authentication & Authorization
 
-#### 1. Register Wallet Application
+#### Register Wallet Application
+
 ```
 POST /api/v1/wallet/register
 ```
@@ -44,26 +66,27 @@ POST /api/v1/wallet/register
 {
   "walletName": "YourWallet",
   "developerAddress": "0x...",
-  "callback_url": "https://yourwallet.com/chronos-callback",
-  "requested_permissions": ["vault_creation", "transaction_monitoring", "security_alerts"]
+  "callbackUrl": "https://yourwallet.com/chronos-callback",
+  "requestedPermissions": ["vault_creation", "transaction_monitoring"]
 }
 ```
 
 **Response:**
 ```json
 {
-  "api_key": "cvt_live_...",
-  "api_secret": "cvt_secret_...",
-  "wallet_id": "wallet_12345",
-  "permissions": ["vault_creation", "transaction_monitoring", "security_alerts"],
-  "rate_limits": {
-    "requests_per_minute": 1000,
-    "burst_limit": 100
+  "apiKey": "cvt_live_...",
+  "apiSecret": "cvt_secret_...",
+  "walletId": "wallet_12345",
+  "permissions": ["vault_creation", "transaction_monitoring"],
+  "rateLimits": {
+    "requestsPerMinute": 1000,
+    "burstLimit": 100
   }
 }
 ```
 
-#### 2. Generate User Session
+#### Generate User Session
+
 ```
 POST /api/v1/wallet/session
 ```
@@ -77,26 +100,28 @@ X-Wallet-Signature: {signature}
 **Request:**
 ```json
 {
-  "user_address": "0x...",
-  "wallet_signature": "0x...",
-  "chain": "ethereum|solana|ton",
-  "session_duration": 3600
+  "userAddress": "0x...",
+  "walletSignature": "0x...",
+  "chain": "arbitrum",
+  "sessionDuration": 3600
 }
 ```
 
 **Response:**
 ```json
 {
-  "session_token": "sess_...",
-  "expires_at": 1676543210,
-  "user_security_score": 98.5,
-  "recommended_vault_types": ["personal", "investment"]
+  "sessionToken": "sess_...",
+  "expiresAt": 1703203200,
+  "userSecurityScore": 98.5
 }
 ```
 
+---
+
 ### Vault Management
 
-#### 3. Create Vault
+#### Create Vault
+
 ```
 POST /api/v1/vault/create
 ```
@@ -110,401 +135,270 @@ X-Wallet-ID: {wallet_id}
 **Request:**
 ```json
 {
-  "vault_type": "personal|investment|inheritance|emergency",
+  "vaultType": "personal",
   "name": "My Secure Vault",
   "assets": [
     {
-      "chain": "ethereum",
-      "token_address": "0x...",
+      "chain": "arbitrum",
+      "tokenAddress": "0x...",
       "amount": "1000000000000000000"
     }
   ],
-  "security_level": "standard|enhanced|maximum",
-  "time_lock": {
+  "securityLevel": "enhanced",
+  "timeLock": {
     "enabled": true,
-    "unlock_date": "2025-01-01T00:00:00Z"
-  },
-  "beneficiaries": ["0x..."]
-}
-```
-
-**Response:**
-```json
-{
-  "vault_id": "vault_cv_...",
-  "vault_address": {
-    "ethereum": "0x...",
-    "solana": "...",
-    "ton": "..."
-  },
-  "security_score": 99.99999,
-  "estimated_attack_cost": "17000000000",
-  "transaction_hash": {
-    "ethereum": "0x...",
-    "solana": "...",
-    "ton": "..."
+    "unlockDate": "2025-06-01T00:00:00Z"
   }
 }
 ```
 
-#### 4. Get Vault Status
+**Response:**
+```json
+{
+  "vaultId": "vault_abc123",
+  "address": "0x...",
+  "status": "active",
+  "trinityVerification": {
+    "arbitrum": "confirmed",
+    "solana": "confirmed",
+    "ton": "pending"
+  }
+}
 ```
-GET /api/v1/vault/{vault_id}/status
+
+#### Get User Vaults
+
+```
+GET /api/v1/vault/list
+```
+
+#### Get Vault Details
+
+```
+GET /api/v1/vault/:vaultId
+```
+
+---
+
+### Trinity Protocol Integration
+
+#### Verify Trinity Consensus
+
+```
+POST /api/v1/trinity/verify
+```
+
+**Request:**
+```json
+{
+  "operationType": "vault_unlock",
+  "vaultId": "vault_abc123",
+  "amount": "500000000000000000"
+}
 ```
 
 **Response:**
 ```json
 {
-  "vault_id": "vault_cv_...",
-  "status": "active|locked|emergency_paused",
-  "total_value_usd": "50000.00",
-  "assets": [
-    {
-      "chain": "ethereum",
-      "token_symbol": "ETH",
-      "amount": "20.5",
-      "value_usd": "40000.00"
+  "operationId": "op_xyz789",
+  "status": "pending",
+  "confirmations": {
+    "required": 2,
+    "current": 0,
+    "chains": {
+      "arbitrum": "pending",
+      "solana": "pending",
+      "ton": "pending"
     }
-  ],
-  "security_health": {
-    "score": 99.99999,
-    "last_audit": "2025-05-30T10:00:00Z",
-    "threat_level": "minimal"
-  },
-  "ai_insights": {
-    "risk_assessment": "low",
-    "optimization_suggestions": ["Consider diversifying to Solana assets"]
   }
 }
 ```
 
-### Transaction Security
+#### Get Consensus Status
 
-#### 5. Pre-Transaction Verification
 ```
-POST /api/v1/transaction/verify
-```
-
-**Request:**
-```json
-{
-  "from_address": "0x...",
-  "to_address": "0x...",
-  "amount": "1000000000000000000",
-  "token_address": "0x...",
-  "chain": "ethereum",
-  "transaction_data": "0x..."
-}
+GET /api/v1/trinity/status/:operationId
 ```
 
-**Response:**
-```json
-{
-  "verification_id": "verify_...",
-  "risk_score": 2.5,
-  "risk_level": "low|medium|high|critical",
-  "ai_analysis": {
-    "suspicious_patterns": [],
-    "confidence": 98.7,
-    "recommendation": "proceed"
-  },
-  "trinity_verification": {
-    "ethereum_verified": true,
-    "solana_verified": true,
-    "ton_verified": true,
-    "consensus_reached": true
-  },
-  "estimated_gas": {
-    "ethereum": "0.003",
-    "optimization_available": true
-  }
-}
-```
-
-#### 6. Execute Secure Transaction
-```
-POST /api/v1/transaction/execute
-```
-
-**Request:**
-```json
-{
-  "verification_id": "verify_...",
-  "signed_transaction": "0x...",
-  "chain": "ethereum",
-  "priority": "standard|fast|instant"
-}
-```
-
-**Response:**
-```json
-{
-  "transaction_id": "tx_cv_...",
-  "trinity_hashes": {
-    "ethereum": "0x...",
-    "solana": "...",
-    "ton": "..."
-  },
-  "status": "pending|confirmed|failed",
-  "security_confirmation": {
-    "mathematical_proof": "verified",
-    "consensus_timestamp": "2025-05-30T10:00:00Z"
-  }
-}
-```
+---
 
 ### Security Monitoring
 
-#### 7. Real-time Security Alerts
-```
-WebSocket: wss://api.chronosvault.org/v1/wallet/alerts
-```
+#### Get Security Score
 
-**Connection:**
-```json
-{
-  "auth": "Bearer {session_token}",
-  "wallet_id": "wallet_12345",
-  "alert_types": ["security_threat", "anomaly_detected", "vault_status"]
-}
 ```
-
-**Alert Example:**
-```json
-{
-  "alert_id": "alert_...",
-  "type": "anomaly_detected",
-  "severity": "medium",
-  "timestamp": "2025-05-30T10:00:00Z",
-  "message": "Unusual transaction pattern detected",
-  "affected_vault": "vault_cv_...",
-  "ai_analysis": {
-    "pattern_type": "volume_spike",
-    "confidence": 87.3,
-    "recommended_action": "verify_identity"
-  },
-  "auto_actions_taken": ["rate_limit_applied", "additional_verification_required"]
-}
-```
-
-#### 8. Security Health Check
-```
-GET /api/v1/wallet/security-health
+GET /api/v1/security/score/:userAddress
 ```
 
 **Response:**
 ```json
 {
-  "overall_score": 96.8,
-  "components": {
-    "wallet_security": 95.2,
-    "vault_security": 99.99999,
-    "transaction_patterns": 94.1,
-    "ai_threat_detection": 98.7
+  "overallScore": 98.5,
+  "factors": {
+    "walletAge": 95,
+    "transactionHistory": 99,
+    "crossChainActivity": 100,
+    "riskExposure": 98
   },
-  "recent_threats": [
-    {
-      "type": "phishing_attempt",
-      "blocked": true,
-      "timestamp": "2025-05-30T09:30:00Z"
-    }
-  ],
-  "recommendations": [
-    "Enable 2FA for additional security",
-    "Consider upgrading to Maximum security tier"
-  ]
+  "recommendations": []
 }
 ```
 
-### Advanced Features
+#### Subscribe to Security Alerts
 
-#### 9. AI Portfolio Optimization
 ```
-POST /api/v1/ai/optimize-portfolio
+POST /api/v1/security/alerts/subscribe
 ```
 
 **Request:**
 ```json
 {
-  "vault_ids": ["vault_cv_1", "vault_cv_2"],
-  "risk_tolerance": "conservative|moderate|aggressive",
-  "time_horizon": "short|medium|long",
-  "goals": ["preservation", "growth", "income"]
+  "userAddress": "0x...",
+  "alertTypes": ["suspicious_activity", "large_transfer", "consensus_failure"],
+  "webhookUrl": "https://yourwallet.com/alerts"
 }
 ```
 
-**Response:**
-```json
-{
-  "optimization_id": "opt_...",
-  "current_allocation": {
-    "ethereum": 60,
-    "solana": 25,
-    "ton": 15
-  },
-  "recommended_allocation": {
-    "ethereum": 55,
-    "solana": 30,
-    "ton": 15
-  },
-  "expected_outcomes": {
-    "risk_reduction": 12.5,
-    "potential_return_increase": 8.3,
-    "diversification_improvement": 15.2
-  },
-  "implementation_steps": [
-    {
-      "action": "rebalance",
-      "from_asset": "ETH",
-      "to_asset": "SOL",
-      "amount": "2.5"
-    }
-  ]
-}
+---
+
+## WebSocket Events
+
+### Connection
+
+```javascript
+const ws = new WebSocket('wss://api.chronosvault.org/ws');
+
+ws.send(JSON.stringify({
+  action: 'authenticate',
+  sessionToken: 'sess_...'
+}));
 ```
 
-#### 10. Cross-Chain Bridge
-```
-POST /api/v1/bridge/transfer
-```
+### Event Types
 
-**Request:**
+#### Consensus Updates
+
 ```json
 {
-  "from_chain": "ethereum",
-  "to_chain": "solana",
-  "token_address": "0x...",
-  "amount": "1000000000000000000",
-  "recipient_address": "...",
-  "security_level": "standard|enhanced"
-}
-```
-
-**Response:**
-```json
-{
-  "bridge_id": "bridge_...",
-  "estimated_time": "5-10 minutes",
-  "fees": {
-    "bridge_fee": "0.1",
-    "gas_fees": {
-      "ethereum": "0.005",
-      "solana": "0.0001"
-    }
-  },
-  "security_guarantees": {
-    "trinity_verification": true,
-    "mathematical_proof": "verified",
-    "insurance_coverage": "full"
+  "event": "consensus.update",
+  "data": {
+    "operationId": "op_xyz789",
+    "confirmations": 2,
+    "status": "confirmed"
   }
 }
 ```
 
-## Security Features
+#### Security Alerts
 
-### 1. Trinity Protocol™ Integration
-- All operations verified across Ethereum, Solana, and TON
-- Mathematical consensus required for critical operations
-- Automatic failover if any chain experiences issues
+```json
+{
+  "event": "security.alert",
+  "data": {
+    "type": "suspicious_activity",
+    "severity": "medium",
+    "details": {
+      "address": "0x...",
+      "action": "unusual_withdrawal_pattern"
+    }
+  }
+}
+```
 
-### 2. AI-Powered Protection
-- Real-time anomaly detection
-- Pattern recognition for threat identification
-- Proactive security recommendations
+---
 
-### 3. Mathematical Security Guarantees
-- Formal verification of all operations
-- Cryptographic proofs for transaction validity
-- Quantum-resistant encryption where available
+## Deployed Contract Addresses
 
-## Rate Limiting
+### Arbitrum Sepolia
 
-### Standard Tier
-- 1,000 requests per minute
-- 100 burst requests
-- WebSocket connections: 10 concurrent
+| Contract | Address |
+|----------|---------|
+| TrinityConsensusVerifier | `0x59396D58Fa856025bD5249E342729d5550Be151C` |
+| ChronosVaultOptimized | `0xAE408eC592f0f865bA0012C480E8867e12B4F32D` |
+| HTLCChronosBridge | `0x82C3AbF6036cEE41E151A90FE00181f6b18af8ca` |
 
-### Premium Tier
-- 10,000 requests per minute
-- 1,000 burst requests
-- WebSocket connections: 100 concurrent
+### Solana Devnet
 
-### Enterprise Tier
-- Custom limits
-- Dedicated infrastructure
-- Priority support
+| Program | Address |
+|---------|---------|
+| Trinity Validator | `CYaDJYRqm35udQ8vkxoajSER8oaniQUcV8Vvw5BqJyo2` |
+| CVT Token | `5g3TkqFxyVe1ismrC5r2QD345CA1YdfWn6s6p4AYNmy4` |
+
+### TON Testnet
+
+| Contract | Address |
+|----------|---------|
+| TrinityConsensus | `EQeGlYzwupSROVWGucOmKyUDbSaKmPfIpHHP5mV73odL8` |
+| ChronosVault | `EQjUVidQfn4m-Rougn0fol7ECCthba2HV0M6xz9zAfax4` |
+
+---
 
 ## Error Handling
 
-### Standard Error Response
 ```json
 {
   "error": {
-    "code": "INVALID_SIGNATURE",
-    "message": "The provided signature is invalid",
+    "code": "CONSENSUS_TIMEOUT",
+    "message": "Consensus not reached within timeout period",
     "details": {
-      "expected_format": "0x...",
-      "received_format": "invalid"
-    },
-    "request_id": "req_...",
-    "timestamp": "2025-05-30T10:00:00Z"
+      "operationId": "op_xyz789",
+      "confirmations": 1,
+      "required": 2
+    }
   }
 }
 ```
 
 ### Error Codes
-- `INVALID_API_KEY`: API key is invalid or expired
-- `INSUFFICIENT_PERMISSIONS`: Operation not allowed for current permissions
-- `RATE_LIMIT_EXCEEDED`: Too many requests
-- `INVALID_SIGNATURE`: Signature verification failed
-- `VAULT_NOT_FOUND`: Requested vault does not exist
-- `SECURITY_THREAT_DETECTED`: Operation blocked due to security concerns
-- `CHAIN_UNAVAILABLE`: One or more chains temporarily unavailable
-- `CONSENSUS_FAILED`: Trinity Protocol™ consensus could not be reached
 
-## Webhooks
+| Code | Description |
+|------|-------------|
+| `INVALID_SESSION` | Session expired or invalid |
+| `PERMISSION_DENIED` | Insufficient permissions |
+| `CONSENSUS_TIMEOUT` | Consensus not reached in time |
+| `VAULT_LOCKED` | Vault is time-locked |
+| `CHAIN_UNAVAILABLE` | Blockchain temporarily unavailable |
 
-### Configuration
-```
-POST /api/v1/wallet/webhooks
-```
+---
 
-**Request:**
-```json
-{
-  "url": "https://yourwallet.com/chronos-webhook",
-  "events": ["vault_created", "transaction_completed", "security_alert"],
-  "secret": "your_webhook_secret"
-}
-```
+## SDK Integration
 
-### Event Example
-```json
-{
-  "event": "vault_created",
-  "timestamp": "2025-05-30T10:00:00Z",
-  "data": {
-    "vault_id": "vault_cv_...",
-    "wallet_id": "wallet_12345",
-    "user_address": "0x...",
-    "vault_type": "personal"
+For the best developer experience, use our official SDK:
+
+```typescript
+import { ChronosVaultSDK } from '@chronos-vault/sdk';
+
+const sdk = new ChronosVaultSDK({
+  network: 'testnet',
+  mode: 'hybrid', // API + RPC
+  apiBaseUrl: 'https://testnet.chronosvault.org/api',
+  rpc: {
+    arbitrum: {
+      rpcUrl: 'https://sepolia-rollup.arbitrum.io/rpc',
+    },
   },
-  "signature": "sha256=..."
-}
+});
+
+// Create vault with Trinity verification
+const vault = await sdk.vault.createVault({
+  name: 'User Vault',
+  vaultType: 'erc4626',
+  chain: 'arbitrum',
+  depositAmount: '1.0',
+});
+
+// Track consensus
+const status = await sdk.trinity.getOperationStatus(vault.operationId);
 ```
 
-## Getting Started
+---
 
-1. **Register your wallet** using the `/wallet/register` endpoint
-2. **Implement user authentication** with signature verification
-3. **Create vaults** for your users with appropriate security levels
-4. **Monitor transactions** using our AI-powered verification system
-5. **Handle security alerts** through WebSocket connections
-6. **Optimize portfolios** using our AI recommendations
+## Resources
 
-## Support
+- SDK: https://github.com/Chronos-Vault/chronos-vault-sdk
+- Documentation: https://docs.chronosvault.org
+- Security Proofs: https://github.com/Chronos-Vault/chronos-vault-security
 
-- **Documentation**: https://docs.chronosvault.org/wallet-integration
-- **API Support**: api-support@chronosvault.org
-- **Developer Community**: https://discord.gg/chronosvault-devs
-- **Status Page**: https://status.chronosvault.org
+---
+
+*Last updated: December 2025*
