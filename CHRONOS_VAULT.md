@@ -1,121 +1,485 @@
-# Chronos Vault - Multi-Chain Digital Asset Vault Platform
+# Chronos Vault SDK - Complete Developer Guide
 
-## Overview
-Chronos Vault is a decentralized platform designed for creating tamper-proof digital time vaults. It leverages advanced blockchain technologies and cross-chain security to enable users to securely store digital assets. The platform offers sophisticated vault types, quantum-resistant encryption, and AI-powered security monitoring across multiple blockchain networks. The project aims to be a leading solution in the blockchain industry by providing revolutionary and enterprise-ready security for digital assets.
+**Version:** 1.1.0  
+**Last Updated:** December 2025  
+**Status:** Production Ready (Testnet)
 
-## User Preferences
-Preferred communication style: Simple, everyday language.
-Project vision: Believes Chronos Vault will be "the best ever in blockchain industry" with revolutionary solutions.
-Technical approach: Mathematical security over trust assumptions, enterprise-ready implementation.
+---
 
-## Recent Platform-Wide Updates (October 2025)
-**LAYER 2 DEPLOYMENT - Ethereum Layer 2 (Arbitrum) Migration:**
-- Migrated Trinity Protocol from Ethereum L1 Sepolia to Arbitrum Sepolia (Layer 2)
-- Fixed blockchain roles: Ethereum Layer 2 (Arbitrum) = Primary, Solana = Monitor, TON = Backup
-- 95% cost reduction through Layer 2 deployment while maintaining Ethereum's base layer security
-- All frontend pages updated to specify "Ethereum Layer 2 (Arbitrum)" for clarity
-- Backend configured to support both Sepolia (legacy) and Arbitrum L2 via ETHEREUM_NETWORK env var
-- Hardhat deployment scripts created for Arbitrum Sepolia (Chain ID: 421614)
-- Pages updated: home.tsx, home-modern.tsx, whitepaper.tsx, triple-chain-security.tsx, technical-specification.tsx, documentation.tsx
+## What is Chronos Vault?
 
-## System Architecture
+Chronos Vault is an enterprise-grade multi-chain security system implementing Trinity Protocol's mathematically provable 2-of-3 consensus verification across three blockchains:
 
-### UI/UX Decisions
-The frontend is built with React and TypeScript, utilizing TailwindCSS with shadcn/ui for a modern and responsive user interface. Wouter handles client-side routing, and React Query manages server state. The platform includes a multi-chain wallet authentication system and WebSocket integration for real-time updates. The UI consolidates numerous pages into core hubs for improved user experience and navigation, such as the Operations & Monitoring Hub, Cross-Chain Bridge Hub, and Security Control Center.
+- **Arbitrum** (Ethereum L2) - Primary security layer
+- **Solana** - High-frequency monitoring
+- **TON** - Emergency recovery & quantum-safe storage
 
-**Security Pages Organization (October 2025):**
-- Security Control Center - Main dashboard for all security features
-- Trinity Protocol™ - Full multi-chain wallet integration (MetaMask, Phantom, TON Keeper) with FIXED 2-of-3 chain consensus: Ethereum Layer 2 (Arbitrum) = Primary, Solana = Monitor, TON = Backup
-- TON Emergency Recovery - Comprehensive emergency vault recovery system with real-time 3-chain verification status (requires ALL 3 chains for maximum security)
-- Behavioral Authentication - AI-powered user behavior analysis
-- Quantum-Resistant Security - Progressive quantum shield implementation
-- Zero-Knowledge Proofs - ZK verification service and proof aggregation
+## Why Use Trinity Protocol?
 
-**Payment System:**
-- **100% CRYPTO-ONLY** - NO STRIPE, NO FIAT CURRENCY
-- Payments via wallet connections: MetaMask (Ethereum), Phantom (Solana), TON Keeper (TON)
-- Users pay directly with their connected blockchain wallets
-- Blockchain-native platform - all transactions on-chain
+Traditional cross-chain bridges have a single point of failure. Trinity Protocol eliminates this:
 
-### Technical Implementations
-The backend uses Express.js with TypeScript, providing a RESTful API and WebSocket implementation for real-time communication. Security features include JWT-based authentication with multi-signature support, advanced encryption, rate limiting, and audit trails. Data is stored in a PostgreSQL database, managed with Drizzle ORM for type-safe operations and Drizzle Kit for schema migrations.
+```
+❌ Single Bridge:        1 chain compromised = Total loss
+✅ Trinity Protocol:     1 chain compromised = Still secure
+```
 
-### Feature Specifications
-- **Multi-Chain Integration**: Primary operations on Ethereum Layer 2 (Arbitrum) with 95% lower fees, high-frequency monitoring on Solana, and quantum-resistant security with TON. REAL cross-chain bridge with deployed smart contracts facilitates trustless asset transfers.
-- **Vault System**: Offers 22 specialized vault types (e.g., Time Lock, Multi-Signature, Quantum-Resistant, Geo-Location) with configurable security levels (Standard, Enhanced, Maximum) and support for various cryptocurrencies and NFTs.
-- **Security Framework**: Implements the Trinity Protocol for triple-chain security, zero-knowledge proofs for privacy, AI-powered threat monitoring, and quantum-resistant encryption.
-- **Authentication System**: Supports popular wallets (MetaMask, Phantom, TON Keeper), multi-signature requirements, secure session management, and various account recovery options. **REAL wallet connections** with TonConnectUI modal for TON Keeper (not mock) and proper base64 signature encoding for Phantom verification.
-- **Real Bridge with Trinity Protocol**: Layer 2 deployment ready - backend supports both Ethereum Sepolia (legacy) and Arbitrum Sepolia via ETHEREUM_NETWORK env var. Implements TRUSTLESS 2-of-3 consensus verification. Supports HTLC atomic swaps with hash time-locked contracts for mathematical security guarantees.
+**Mathematical Guarantee**: Requires 2-of-3 independent blockchains to approve every operation. Even if one chain is attacked, your assets remain secure.
 
-### System Design Choices
-The system employs a Trinity Protocol for 2-of-3 consensus verification across Ethereum, Solana, and TON, ensuring funds remain safe even if one chain is compromised. Mathematical Merkle Proofs are used for cross-chain verification, enabling secure and unbypassable unlock conditions. The architecture prioritizes enterprise-grade security and scalability.
+---
 
-**TRINITY PROTOCOL IMPLEMENTATION** (October 2025):
-- FULLY OPERATIONAL 3-chain verification system with DEPLOYED PROGRAMS
-- **FIXED BLOCKCHAIN ROLES** (Layer 2 Optimized):
-  - Ethereum Layer 2 (Arbitrum) = PRIMARY SECURITY (95% lower fees than L1)
-  - Solana = RAPID VALIDATION (high-frequency monitoring) ✅ DEPLOYED & INTEGRATED
-  - TON = QUANTUM-RESISTANT BACKUP (emergency recovery)
-  - 2-of-3 mathematical consensus: Even if Arbitrum has issues, Solana + TON consensus protects assets
-  - Layer 2 inherits Ethereum's base layer security through fraud proofs
-- Wallet Integration: MetaMask (Ethereum), Phantom (Solana), TON Keeper (TON) all working
-- Emergency Recovery: Real-time verification status from all 3 blockchains
-- Backend API: `/api/trinity/emergency-recovery` with proper success/failure handling
-- Per-chain verification details returned even when consensus fails
-- **Solana Integration (October 5, 2025):**
-  - Backend: SolanaProgramClient class interfaces with deployed Solana program
-  - API Endpoint: `/api/solana/status` exposes program ID, current slot, RPC URL, network, explorer URL
-  - Trinity Protocol: Uses SolanaProgramClient for real on-chain verification (not mock)
-  - Frontend: SecurityServiceAggregator calls backend API for Solana chain status monitoring
-  - Development Mode: Automated Recovery Protocol health checks disabled to prevent false degradation warnings
-- **Deployed Contracts:**
-  - **Solana Devnet (Rapid Validation) - LIVE DEPLOYMENT (October 5, 2025):**
-    - ChronosVault Program: `CYaDJYRqm35udQ8vkxoajSER8oaniQUcV8Vvw5BqJyo2`
-    - Verify on Solana Explorer: https://explorer.solana.com/address/CYaDJYRqm35udQ8vkxoajSER8oaniQUcV8Vvw5BqJyo2?cluster=devnet
-  - **TON Testnet (Quantum-Resistant Backup):**
-    - ChronosVault: `EQDJAnXDPT-NivritpEhQeP0XmG20NdeUtxgh4nUiWH-DF7M`
-    - CVTBridge: `EQAOJxa1WDjGZ7f3n53JILojhZoDdTOKWl6h41_yOWX3v0tq`
-  - **Ethereum Sepolia (Legacy L1):**
-    - ChronosVault: `0x29fd67501afd535599ff83AE072c20E31Afab958`
-    - CrossChainBridgeV1: `0xFb419D8E32c14F774279a4dEEf330dc893257147`
-  - **Arbitrum Sepolia (Layer 2 - Primary Security) - LIVE DEPLOYMENT:**
-    - CVT Token: `0xFb419D8E32c14F774279a4dEEf330dc893257147`
-    - CVTBridge: `0x21De95EbA01E31173Efe1b9c4D57E58bb840bA86` (proper 2-of-3 validators)
-    - Test USDC: `0x6818bbb8f604b4c0b52320f633C1E5BF2c5b07bd`
-    - ChronosVault: `0x99444B0B1d6F7b21e9234229a2AC2bC0150B9d91`
-    - CrossChainBridgeV1: `0x13dc7df46c2e87E8B2010A28F13404580158Ed9A`
-    - Trinity Validators (testnet - replace before mainnet):
-      - Ethereum L2: `0x955Bb279Af6cf954d077290dD96C370e35ac5b3F`
-      - Solana: `0x7701D6f186002EBBf37b4171831A44BBEABA72e7`
-      - TON: `0x26782123B2C8631Fc6F83b04408eFDB4620090F5`
-    - Deployment script: `scripts/deploy-arbitrum.cjs`
-    - Verify on Arbiscan: https://sepolia.arbiscan.io
-- Mathematical consensus proofs using cryptographic hashing
-- Automated failover working in production
+## Quick Start (5 Minutes)
 
-**TRUSTLESS BRIDGE IMPLEMENTATION** (October 2025):
-- Real smart contract interactions via ethers.js with deployed CrossChainBridgeV1 contract
-- HTLC (Hash Time-Locked Contracts) for atomic swaps with cryptographic security
-- Trinity Protocol verification generates chain proofs from Ethereum, Solana, and TON
-- Merkle proof generation for cross-chain mathematical verification
-- NO human validators or trusted operators - ONLY mathematical consensus
-- Bridge routes: /api/bridge/initiate (real transactions), /api/bridge/swap/atomic (HTLC)
-- Service file: server/blockchain/real-bridge-service.ts
+### 1. Install
 
-## External Dependencies
+```bash
+npm install @chronos-vault/sdk
+```
 
-### Blockchain Networks
-- Ethereum Layer 2: Arbitrum Sepolia (primary deployment, 95% lower fees)
-- Ethereum Layer 1: Sepolia testnet (legacy support)
-- Solana: Devnet for development
-- TON: Testnet for development
+### 2. Initialize
 
-### Third-Party Services
-- WebSocket services for real-time communication
-- Blockchain RPC providers (Infura, Alchemy, etc.)
-- NO third-party payment processors - all payments on-chain via wallets
+```typescript
+import { ChronosVaultSDK } from '@chronos-vault/sdk';
 
-### Development Tools
-- Hardhat for Ethereum smart contract development
-- Drizzle Kit for database management
-- TypeScript for type safety across the stack
+const sdk = new ChronosVaultSDK({
+  network: 'testnet',
+  apiBaseUrl: 'https://testnet.chronosvault.org/api',
+});
+```
+
+### 3. Create Your First Vault
+
+```typescript
+const vault = await sdk.vault.createVault({
+  name: 'My Secure Vault',
+  vaultType: 'standard',
+  chain: 'arbitrum',
+  depositAmount: '0.1', // 0.1 ETH
+});
+
+console.log('Vault created:', vault.id);
+console.log('Address:', vault.address);
+```
+
+---
+
+## Core Concepts
+
+### 1. Vaults
+
+Secure storage for your assets with Trinity verification:
+
+```typescript
+// Create vault
+const vault = await sdk.vault.createVault({
+  name: 'Savings',
+  vaultType: 'erc4626',
+  chain: 'arbitrum',
+  depositAmount: '1.0',
+});
+
+// Deposit
+await sdk.vault.deposit(vault.id, '0.5');
+
+// Withdraw (requires 2-of-3 consensus)
+await sdk.vault.withdraw(vault.id, '0.25');
+
+// Check balance
+const details = await sdk.vault.getVault(vault.id);
+```
+
+### 2. Atomic Swaps (HTLC)
+
+Trustless cross-chain trades without intermediaries:
+
+```typescript
+// Generate secret
+const { secret, secretHash } = sdk.htlc.generateSecret();
+
+// Create swap: 1 ETH on Arbitrum → SOL on Solana
+const swap = await sdk.htlc.createSwap({
+  sourceChain: 'arbitrum',
+  targetChain: 'solana',
+  amount: '1.0',
+  participant: '0x...', // Counterparty
+  timeLockHours: 24,
+});
+
+// Counterparty claims with your secret
+await sdk.htlc.claimSwap({
+  swapId: swap.id,
+  secret: secret,
+});
+
+// Refund if never claimed
+await sdk.htlc.refundSwap(swap.id);
+```
+
+### 3. Cross-Chain Bridge
+
+Transfer assets between chains with Trinity verification:
+
+```typescript
+// Check supported routes
+const status = await sdk.bridge.getBridgeStatus('arbitrum', 'ton');
+
+// Estimate fees
+const fees = await sdk.bridge.estimateFees({
+  sourceChain: 'arbitrum',
+  targetChain: 'ton',
+  amount: '10.0',
+  assetType: 'ETH',
+});
+
+// Transfer
+const transfer = await sdk.bridge.initiateTransfer({
+  sourceChain: 'arbitrum',
+  targetChain: 'ton',
+  amount: '10.0',
+  assetType: 'ETH',
+  senderAddress: '0x...',
+  recipientAddress: 'EQ...',
+});
+
+// Track status
+const status = await sdk.bridge.getTransferStatus(transfer.id);
+```
+
+### 4. Trinity Consensus
+
+Monitor 2-of-3 verification for operations:
+
+```typescript
+// Submit operation
+const operation = await sdk.trinity.submitConsensusOperation({
+  operationType: 'vault_unlock',
+  data: { vaultId: 'vault-123', amount: '5.0' },
+});
+
+// Check confirmations
+const status = await sdk.trinity.getOperationStatus(operation.id);
+console.log('Confirmations:', status.confirmations, '/ 2 required');
+console.log('Arbitrum:', status.chains.arbitrum.confirmed ? '✓' : 'pending');
+console.log('Solana:', status.chains.solana.confirmed ? '✓' : 'pending');
+console.log('TON:', status.chains.ton.confirmed ? '✓' : 'pending');
+```
+
+---
+
+## Configuration Modes
+
+### API Mode (Default - Recommended)
+
+Use Chronos Vault's backend API:
+
+```typescript
+const sdk = new ChronosVaultSDK({
+  network: 'testnet',
+  apiBaseUrl: 'https://testnet.chronosvault.org/api',
+  apiKey: 'your-api-key', // Optional
+  timeout: 30000,
+});
+```
+
+**Best for:** Web apps, most developers, fastest integration
+
+### RPC Mode (Direct Blockchain)
+
+Direct smart contract interaction without API:
+
+```typescript
+const sdk = new ChronosVaultSDK({
+  network: 'testnet',
+  mode: 'rpc',
+  rpc: {
+    arbitrum: {
+      rpcUrl: 'https://sepolia-rollup.arbitrum.io/rpc',
+      privateKey: process.env.PRIVATE_KEY,
+      chainId: 421614,
+    },
+    solana: {
+      rpcUrl: 'https://api.devnet.solana.com',
+      commitment: 'confirmed',
+    },
+    ton: {
+      endpoint: 'https://testnet.toncenter.com/api/v2/jsonRPC',
+      network: 'testnet',
+    },
+  },
+});
+```
+
+**Best for:** Advanced users, custom applications, maximum control
+
+### Hybrid Mode
+
+Combine API convenience with RPC control:
+
+```typescript
+const sdk = new ChronosVaultSDK({
+  network: 'testnet',
+  mode: 'hybrid',
+  apiBaseUrl: 'https://testnet.chronosvault.org/api',
+  rpc: {
+    arbitrum: { rpcUrl: '...', privateKey: '...' },
+  },
+});
+```
+
+**Best for:** Complex applications needing both approaches
+
+---
+
+## RPC Clients
+
+For advanced developers using direct blockchain interactions:
+
+```typescript
+import { TrinityRPCClient, HTLCRPCClient, VaultRPCClient, BridgeRPCClient } from '@chronos-vault/sdk';
+
+// Trinity consensus verification
+const trinity = new TrinityRPCClient(rpcConfig);
+await trinity.verifyConsensus(operationId);
+
+// HTLC atomic swaps
+const htlc = new HTLCRPCClient(rpcConfig);
+await htlc.initiateSwap({ participant, hashLock, timeLock, amount });
+
+// Vault operations
+const vault = new VaultRPCClient(rpcConfig);
+await vault.deposit('1.0');
+await vault.withdraw('0.5');
+
+// Cross-chain bridge
+const bridge = new BridgeRPCClient(rpcConfig);
+const fee = await bridge.getMessageFee('solana');
+const { txHash, messageId } = await bridge.sendMessage('solana', recipient, data);
+```
+
+---
+
+## Deployed Contracts
+
+### Arbitrum Sepolia (Testnet)
+
+```
+TrinityConsensusVerifier    0x59396D58Fa856025bD5249E342729d5550Be151C
+TrinityShieldVerifierV2     0x5E1EE00E5DFa54488AC5052C747B97c7564872F9
+ChronosVaultOptimized       0xAE408eC592f0f865bA0012C480E8867e12B4F32D
+HTLCChronosBridge           0x82C3AbF6036cEE41E151A90FE00181f6b18af8ca
+CrossChainMessageRelay      0xC6F4f855fc690CB52159eE3B13C9d9Fb8D403E59
+TrinityExitGateway          0xE6FeBd695e4b5681DCF274fDB47d786523796C04
+TrinityKeeperRegistry       0xAe9bd988011583D87d6bbc206C19e4a9Bda04830
+```
+
+### Solana Devnet
+
+```
+Trinity Validator           CYaDJYRqm35udQ8vkxoajSER8oaniQUcV8Vvw5BqJyo2
+CVT Token                   5g3TkqFxyVe1ismrC5r2QD345CA1YdfWn6s6p4AYNmy4
+Bridge Program              6wo8Gso3uB8M6t9UGiritdGmc4UTPEtM5NhC6vbb9CdK
+Vesting Program             3dxjcEGP8MurCtodLCJi1V6JBizdRRAYg91nZkhmX1sB
+```
+
+### TON Testnet
+
+```
+TrinityConsensus            EQeGlYzwupSROVWGucOmKyUDbSaKmPfIpHHP5mV73odL8
+ChronosVault                EQjUVidQfn4m-Rougn0fol7ECCthba2HV0M6xz9zAfax4
+CrossChainBridge            EQgWobA9D4u6Xem3B8e6Sde_NEFZYicyy7_5_XvOT18mA
+CVT Jetton                  EQDJAnXDPT-NivritpEhQeP0XmG20NdeUtxgh4nUiWH-DF7M
+```
+
+See `networks.json` for complete configuration.
+
+---
+
+## Error Handling
+
+```typescript
+import { SDKError, ProviderError, ConsensusError } from '@chronos-vault/sdk';
+
+try {
+  await sdk.vault.withdraw(vaultId, amount);
+} catch (error) {
+  if (error instanceof ConsensusError) {
+    console.log('Consensus failed:', error.confirmations, 'of 2 required');
+    // Only 0-1 chains confirmed, retry later
+  } else if (error instanceof ProviderError) {
+    console.log('Chain error:', error.chain);
+    // Blockchain connection issue
+  } else if (error instanceof SDKError) {
+    console.log('SDK error:', error.code, error.message);
+  }
+}
+```
+
+---
+
+## Security Architecture
+
+Trinity Protocol implements **8 Mathematical Defense Layers**:
+
+1. **Zero-Knowledge Proofs** - Groth16 ZK-SNARKs for privacy
+2. **Formal Verification** - Lean 4 theorem proofs
+3. **Multi-Party Computation** - Shamir + CRYSTALS-Kyber
+4. **Verifiable Delay Functions** - Wesolowski time-locks
+5. **AI Governance** - Anomaly detection
+6. **Quantum Resistance** - ML-KEM-1024, Dilithium-5
+7. **Trinity Consensus** - 2-of-3 multi-chain verification
+8. **Trinity Shield TEE** - Intel SGX/AMD SEV enclaves
+
+**All 33 contracts are formally verified with Lean 4 proofs.**
+
+---
+
+## Examples
+
+See the `examples/` directory:
+
+- `basic-vault.ts` - Create and manage vaults
+- `atomic-swap.ts` - Cross-chain HTLC swaps
+- `bridge-transfer.ts` - Asset bridging between chains
+- `consensus-tracking.ts` - Monitor Trinity verification
+
+---
+
+## TypeScript Support
+
+Full TypeScript support with exported types:
+
+```typescript
+import type {
+  ChronosVaultConfig,
+  VaultType,
+  SwapStatus,
+  ConsensusOperation,
+  ChainStatus,
+  TransferStatus,
+} from '@chronos-vault/sdk';
+
+const config: ChronosVaultConfig = {
+  network: 'testnet',
+  mode: 'api',
+  apiBaseUrl: 'https://testnet.chronosvault.org/api',
+};
+```
+
+---
+
+## API Reference
+
+### Trinity Protocol
+
+```typescript
+// Get stats
+const stats = await sdk.trinity.getStats();
+
+// Get chain status
+const chains = await sdk.trinity.getChains();
+
+// Get validators
+const validators = await sdk.trinity.getValidators();
+
+// Submit operation
+const op = await sdk.trinity.submitConsensusOperation({...});
+
+// Check operation status
+const status = await sdk.trinity.getOperationStatus(opId);
+
+// Get security layers
+const layers = sdk.trinity.getSecurityLayers();
+```
+
+### Vault Management
+
+```typescript
+// Create vault
+const vault = await sdk.vault.createVault({...});
+
+// Get vault
+const vault = await sdk.vault.getVault(vaultId);
+
+// List vaults
+const vaults = await sdk.vault.listVaults();
+
+// Deposit
+await sdk.vault.deposit(vaultId, amount);
+
+// Withdraw
+await sdk.vault.withdraw(vaultId, amount);
+
+// Get vault types
+const types = sdk.vault.getVaultTypes();
+```
+
+### HTLC Atomic Swaps
+
+```typescript
+// Generate secret
+const { secret, secretHash } = sdk.htlc.generateSecret();
+
+// Create swap
+const swap = await sdk.htlc.createSwap({...});
+
+// Get status
+const status = await sdk.htlc.getSwapStatus(swapId);
+
+// List swaps
+const swaps = await sdk.htlc.listSwaps({ status: 'active' });
+
+// Claim swap
+await sdk.htlc.claimSwap({ swapId, secret });
+
+// Refund swap
+await sdk.htlc.refundSwap(swapId);
+```
+
+### Bridge
+
+```typescript
+// Get bridge status
+const status = await sdk.bridge.getBridgeStatus(source, target);
+
+// Estimate fees
+const fees = await sdk.bridge.estimateFees({...});
+
+// Initiate transfer
+const transfer = await sdk.bridge.initiateTransfer({...});
+
+// Get transfer status
+const status = await sdk.bridge.getTransferStatus(transferId);
+```
+
+---
+
+## Deployment Guides
+
+- [Solana Deployment](./SOLANA_DEPLOYMENT.md)
+- [API Integration](./docs/API_REFERENCE.md)
+- [Wallet Integration](./docs/wallet-integration-api.md)
+
+---
+
+## Resources
+
+| Resource | Link |
+|----------|------|
+| SDK Docs | https://docs.chronosvault.org |
+| API Docs | https://docs.chronosvault.org/api |
+| GitHub | https://github.com/Chronos-Vault |
+| Security Proofs | https://github.com/Chronos-Vault/chronos-vault-security |
+| Website | https://chronosvault.org |
+
+---
+
+## Contributing
+
+See [CONTRIBUTING.md](./CONTRIBUTING.md) for how to contribute.
+
+## License
+
+MIT License - See [LICENSE](./LICENSE) for details.
+
+---
+
+**Built by the Chronos Vault Team**
