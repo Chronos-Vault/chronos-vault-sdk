@@ -1,22 +1,14 @@
-<!-- Chronos Vault - Trinity Protocol™ -->
 # Chronos Vault SDK Usage Guide
+
+**Version:** 1.1.0  
+**Last Updated:** December 2025  
+**Package:** `@chronos-vault/sdk`
 
 ## Overview
 
-The Chronos Vault SDK provides client libraries for multiple programming languages, enabling seamless integration with the Chronos Vault platform. This document provides guidance on how to use these SDKs to interact with the Chronos Vault API.
-
-## Available SDKs
-
-- [JavaScript/TypeScript](#javascripttypescript)
-- [Python](#python)
-- [Java](#java)
-- [Go](#go)
-- [Rust](#rust)
-- [.NET](#net)
+The Chronos Vault SDK provides a TypeScript/JavaScript client library for integrating with the Trinity Protocol multi-chain consensus system across Arbitrum, Solana, and TON blockchains.
 
 ## Installation
-
-### JavaScript/TypeScript
 
 ```bash
 # npm
@@ -29,702 +21,301 @@ yarn add @chronos-vault/sdk
 pnpm add @chronos-vault/sdk
 ```
 
-### Python
+## Quick Start
 
-```bash
-pip install chronos-vault-sdk
-```
-
-### Java
-
-```xml
-<!-- Maven -->
-<dependency>
-  <groupId>org.chronosvault</groupId>
-  <artifactId>chronos-vault-sdk</artifactId>
-  <version>1.0.0</version>
-</dependency>
-```
-
-```gradle
-// Gradle
-implementation 'org.chronosvault:chronos-vault-sdk:1.0.0'
-```
-
-### Go
-
-```bash
-go get github.com/chronosvault/sdk-go
-```
-
-### Rust
-
-```toml
-# Cargo.toml
-[dependencies]
-chronos-vault-sdk = "1.0.0"
-```
-
-### .NET
-
-```bash
-dotnet add package ChronosVault.SDK
-```
-
-## Authentication
-
-### API Key Authentication
-
-#### JavaScript/TypeScript
+### API Mode (Default)
 
 ```typescript
-import { ChronosVaultClient } from '@chronos-vault/sdk';
+import { ChronosVaultSDK } from '@chronos-vault/sdk';
 
-// Initialize with API key
-const client = new ChronosVaultClient({
-  apiKey: 'your_api_key',
-  environment: 'production' // or 'testnet'
+const sdk = new ChronosVaultSDK({
+  network: 'testnet',
+  apiBaseUrl: 'https://api.chronosvault.org',
+  apiKey: 'your-api-key', // Optional
 });
+
+// Get Trinity Protocol statistics
+const stats = await sdk.trinity.getStats();
+console.log('Total Vaults:', stats.vaults.totalVaults);
+console.log('Consensus Success Rate:', stats.validators.consensusSuccessRate);
 ```
 
-#### Python
-
-```python
-from chronos_vault_sdk import ChronosVaultClient
-
-# Initialize with API key
-client = ChronosVaultClient(
-    api_key='your_api_key',
-    environment='production'  # or 'testnet'
-)
-```
-
-### Wallet-Based Authentication
-
-#### JavaScript/TypeScript
+### RPC Mode (Direct Blockchain Access)
 
 ```typescript
-import { ChronosVaultClient } from '@chronos-vault/sdk';
+import { ChronosVaultSDK } from '@chronos-vault/sdk';
 
-// Initialize with wallet
-const client = new ChronosVaultClient({
-  wallet: {
-    type: 'ethereum', // or 'ton', 'solana', 'bitcoin'
-    provider: window.ethereum // or custom provider
-  },
-  environment: 'production' // or 'testnet'
-});
-
-// Authenticate
-await client.authenticate();
-```
-
-#### Python
-
-```python
-from chronos_vault_sdk import ChronosVaultClient
-from chronos_vault_sdk.providers import EthereumProvider
-
-# Initialize with wallet
-ethereum_provider = EthereumProvider(private_key='your_ethereum_private_key')
-client = ChronosVaultClient(
-    wallet={
-        'type': 'ethereum',  # or 'ton', 'solana', 'bitcoin'
-        'provider': ethereum_provider
+const sdk = new ChronosVaultSDK({
+  network: 'testnet',
+  mode: 'rpc',
+  rpc: {
+    arbitrum: {
+      rpcUrl: 'https://sepolia-rollup.arbitrum.io/rpc',
+      privateKey: process.env.PRIVATE_KEY,
+      chainId: 421614,
     },
-    environment='production'  # or 'testnet'
-)
+    solana: {
+      rpcUrl: 'https://api.devnet.solana.com',
+      commitment: 'confirmed',
+    },
+    ton: {
+      endpoint: 'https://testnet.toncenter.com/api/v2/jsonRPC',
+      network: 'testnet',
+    },
+  },
+});
 
-# Authenticate
-client.authenticate()
+// Direct blockchain operations
+const blockNumber = await sdk.providers?.arbitrum?.getBlockNumber();
 ```
 
-## Basic Usage
+## Core Modules
+
+### Trinity Protocol Client
+
+```typescript
+// Get protocol statistics
+const stats = await sdk.trinity.getStats();
+
+// Get chain status
+const chainStatus = await sdk.trinity.getChainStatus('arbitrum');
+
+// Get validators
+const validators = await sdk.trinity.getValidators();
+
+// Submit consensus operation
+const operation = await sdk.trinity.submitConsensusOperation({
+  operationType: 'vault_unlock',
+  data: { vaultId: 'vault-123' },
+});
+
+// Track consensus progress
+const status = await sdk.trinity.getOperationStatus(operation.id);
+console.log(`Confirmations: ${status.confirmations}/2`);
+```
+
+### HTLC Atomic Swaps
+
+```typescript
+// Generate secret for swap
+const { secret, secretHash } = sdk.htlc.generateSecret();
+
+// Create a swap
+const swap = await sdk.htlc.createSwap({
+  sourceChain: 'arbitrum',
+  targetChain: 'solana',
+  amount: '1.0',
+  participant: '0x...',
+  timeLockHours: 24,
+});
+
+// Claim swap with secret
+await sdk.htlc.claimSwap({
+  swapId: swap.id,
+  secret: secret,
+});
+
+// Refund expired swap
+await sdk.htlc.refundSwap(swap.id);
+```
 
 ### Vault Management
 
-#### List Vaults
+```typescript
+// Create a vault
+const vault = await sdk.vault.createVault({
+  name: 'My Secure Vault',
+  vaultType: 'erc4626',
+  chain: 'arbitrum',
+  depositAmount: '10.0',
+});
 
-##### JavaScript/TypeScript
+// Get vault details
+const details = await sdk.vault.getVault(vault.id);
+
+// Deposit to vault
+await sdk.vault.deposit(vault.id, '5.0');
+
+// Withdraw from vault
+await sdk.vault.withdraw(vault.id, '2.5');
+
+// Get vault types
+const vaultTypes = sdk.vault.getVaultTypes();
+```
+
+### Cross-Chain Bridge
 
 ```typescript
-// Get all vaults
-const vaults = await client.vaults.list();
+// Check bridge status
+const status = await sdk.bridge.getBridgeStatus('arbitrum', 'solana');
 
-// Get vaults with filters
-const timeLockedVaults = await client.vaults.list({
-  type: 'time-lock',
-  status: 'active',
-  page: 1,
-  limit: 20
+// Estimate fees
+const fees = await sdk.bridge.estimateFees({
+  sourceChain: 'arbitrum',
+  targetChain: 'solana',
+  amount: '100.0',
+  assetType: 'ETH',
+});
+
+// Transfer assets
+const transfer = await sdk.bridge.initiateTransfer({
+  sourceChain: 'arbitrum',
+  targetChain: 'solana',
+  amount: '50.0',
+  assetType: 'ETH',
+  senderAddress: '0x...',
+  recipientAddress: '...',
 });
 ```
 
-##### Python
+## RPC Clients
 
-```python
-# Get all vaults
-vaults = client.vaults.list()
+For direct blockchain interaction without API:
 
-# Get vaults with filters
-time_locked_vaults = client.vaults.list(
-    type='time-lock',
-    status='active',
-    page=1,
-    limit=20
-)
-```
-
-#### Get Vault Details
-
-##### JavaScript/TypeScript
+### TrinityRPCClient
 
 ```typescript
-const vault = await client.vaults.get('v_1a2b3c4d5e6f');
-console.log(vault.name); // "My Savings Vault"
-console.log(vault.status); // "active"
+import { TrinityRPCClient } from '@chronos-vault/sdk';
+
+const client = new TrinityRPCClient(rpcConfig);
+await client.verifyConsensus(operationId);
+await client.getConsensusState(operationId);
 ```
 
-##### Python
-
-```python
-vault = client.vaults.get('v_1a2b3c4d5e6f')
-print(vault.name)  # "My Savings Vault"
-print(vault.status)  # "active"
-```
-
-#### Create a Vault
-
-##### JavaScript/TypeScript
+### HTLCRPCClient
 
 ```typescript
-const newVault = await client.vaults.create({
-  name: 'My Savings Vault',
-  description: 'Long-term savings vault',
-  type: 'time-lock',
-  lockUntil: new Date('2026-01-01'),
-  chains: ['ethereum', 'ton'],
-  features: {
-    quantumResistant: true,
-    crossChainVerification: true,
-    multiSignature: false
-  },
-  security: {
-    verificationLevel: 'advanced',
-    requireMultiSignature: false,
-    timeDelay: 86400
-  }
-});
+import { HTLCRPCClient } from '@chronos-vault/sdk';
 
-console.log(newVault.id); // "v_1a2b3c4d5e6f"
-console.log(newVault.depositAddresses.ethereum); // "0xabcdef1234567890abcdef1234567890abcdef12"
+const client = new HTLCRPCClient(rpcConfig);
+await client.initiateSwap({ participant, hashLock, timeLock, amount });
+await client.claimSwap(swapId, secret);
 ```
 
-##### Python
-
-```python
-from datetime import datetime, timezone
-
-new_vault = client.vaults.create({
-    'name': 'My Savings Vault',
-    'description': 'Long-term savings vault',
-    'type': 'time-lock',
-    'lockUntil': datetime(2026, 1, 1, tzinfo=timezone.utc),
-    'chains': ['ethereum', 'ton'],
-    'features': {
-        'quantumResistant': True,
-        'crossChainVerification': True,
-        'multiSignature': False
-    },
-    'security': {
-        'verificationLevel': 'advanced',
-        'requireMultiSignature': False,
-        'timeDelay': 86400
-    }
-})
-
-print(new_vault.id)  # "v_1a2b3c4d5e6f"
-print(new_vault.deposit_addresses.ethereum)  # "0xabcdef1234567890abcdef1234567890abcdef12"
-```
-
-#### Update a Vault
-
-##### JavaScript/TypeScript
+### VaultRPCClient
 
 ```typescript
-const updatedVault = await client.vaults.update('v_1a2b3c4d5e6f', {
-  name: 'Updated Vault Name',
-  description: 'Updated description',
-  security: {
-    verificationLevel: 'maximum'
-  }
-});
+import { VaultRPCClient } from '@chronos-vault/sdk';
 
-console.log(updatedVault.status); // "updated"
+const client = new VaultRPCClient(rpcConfig);
+await client.deposit('10.0');
+await client.withdraw('5.0');
+await client.getVaultBalance(address);
 ```
 
-##### Python
-
-```python
-updated_vault = client.vaults.update('v_1a2b3c4d5e6f', {
-    'name': 'Updated Vault Name',
-    'description': 'Updated description',
-    'security': {
-        'verificationLevel': 'maximum'
-    }
-})
-
-print(updated_vault.status)  # "updated"
-```
-
-### Asset Management
-
-#### Deposit Assets
-
-##### JavaScript/TypeScript
+### BridgeRPCClient
 
 ```typescript
-const deposit = await client.assets.deposit('v_1a2b3c4d5e6f', {
-  chain: 'ethereum',
-  assetType: 'native',
-  amount: '0.5'
-});
+import { BridgeRPCClient } from '@chronos-vault/sdk';
 
-console.log(deposit.depositAddress); // "0xabcdef1234567890abcdef1234567890abcdef12"
-console.log(deposit.status); // "pending"
+const client = new BridgeRPCClient(rpcConfig);
+const fee = await client.getMessageFee('solana');
+const { txHash, messageId } = await client.sendMessage('solana', recipient, data);
+const status = await client.getMessageStatus(messageId);
 ```
 
-##### Python
+## Deployed Contract Addresses
 
-```python
-deposit = client.assets.deposit('v_1a2b3c4d5e6f', {
-    'chain': 'ethereum',
-    'assetType': 'native',
-    'amount': '0.5'
-})
+### Arbitrum Sepolia (Testnet)
 
-print(deposit.deposit_address)  # "0xabcdef1234567890abcdef1234567890abcdef12"
-print(deposit.status)  # "pending"
-```
+| Contract | Address |
+|----------|---------|
+| TrinityConsensusVerifier | `0x59396D58Fa856025bD5249E342729d5550Be151C` |
+| TrinityShieldVerifierV2 | `0x5E1EE00E5DFa54488AC5052C747B97c7564872F9` |
+| ChronosVaultOptimized | `0xAE408eC592f0f865bA0012C480E8867e12B4F32D` |
+| HTLCChronosBridge | `0x82C3AbF6036cEE41E151A90FE00181f6b18af8ca` |
+| CrossChainMessageRelay | `0xC6F4f855fc690CB52159eE3B13C9d9Fb8D403E59` |
+| TrinityExitGateway | `0xE6FeBd695e4b5681DCF274fDB47d786523796C04` |
+| TrinityKeeperRegistry | `0xAe9bd988011583D87d6bbc206C19e4a9Bda04830` |
+| TrinityGovernanceTimelock | `0xf6b9AB802b323f8Be35ca1C733e155D4BdcDb61b` |
 
-#### Withdraw Assets
+### Solana Devnet
 
-##### JavaScript/TypeScript
+| Program | Address |
+|---------|---------|
+| Trinity Validator | `CYaDJYRqm35udQ8vkxoajSER8oaniQUcV8Vvw5BqJyo2` |
+| CVT Token | `5g3TkqFxyVe1ismrC5r2QD345CA1YdfWn6s6p4AYNmy4` |
+| Bridge Program | `6wo8Gso3uB8M6t9UGiritdGmc4UTPEtM5NhC6vbb9CdK` |
+| Vesting Program | `3dxjcEGP8MurCtodLCJi1V6JBizdRRAYg91nZkhmX1sB` |
+
+### TON Testnet
+
+| Contract | Address |
+|----------|---------|
+| TrinityConsensus | `EQeGlYzwupSROVWGucOmKyUDbSaKmPfIpHHP5mV73odL8` |
+| ChronosVault | `EQjUVidQfn4m-Rougn0fol7ECCthba2HV0M6xz9zAfax4` |
+| CrossChainBridge | `EQgWobA9D4u6Xem3B8e6Sde_NEFZYicyy7_5_XvOT18mA` |
+| CVT Jetton | `EQDJAnXDPT-NivritpEhQeP0XmG20NdeUtxgh4nUiWH-DF7M` |
+
+## Configuration Options
 
 ```typescript
-const withdrawal = await client.assets.withdraw('v_1a2b3c4d5e6f', {
-  chain: 'ethereum',
-  assetType: 'native',
-  amount: '0.5',
-  destinationAddress: '0x1234567890abcdef1234567890abcdef12345678'
-});
-
-console.log(withdrawal.withdrawalId); // "w_7h8j9k0l1m2n"
-console.log(withdrawal.status); // "pending"
-```
-
-##### Python
-
-```python
-withdrawal = client.assets.withdraw('v_1a2b3c4d5e6f', {
-    'chain': 'ethereum',
-    'assetType': 'native',
-    'amount': '0.5',
-    'destinationAddress': '0x1234567890abcdef1234567890abcdef12345678'
-})
-
-print(withdrawal.withdrawal_id)  # "w_7h8j9k0l1m2n"
-print(withdrawal.status)  # "pending"
-```
-
-## Advanced Features
-
-### Vault Verification
-
-#### JavaScript/TypeScript
-
-```typescript
-const verification = await client.security.verifyVault('v_1a2b3c4d5e6f');
-
-console.log(verification.verificationStatus); // "verified"
-console.log(verification.quantumResistanceLevel); // "high"
-```
-
-#### Python
-
-```python
-verification = client.security.verify_vault('v_1a2b3c4d5e6f')
-
-print(verification.verification_status)  # "verified"
-print(verification.quantum_resistance_level)  # "high"
-```
-
-### Progressive Quantum Vault Configuration
-
-#### JavaScript/TypeScript
-
-```typescript
-const quantum = await client.security.configureQuantumSecurity('v_1a2b3c4d5e6f', {
-  algorithms: ['lattice-based', 'multivariate', 'hash-based'],
-  keySize: 'maximum',
-  adaptiveMode: true
-});
-
-console.log(quantum.quantumResistanceLevel); // "maximum"
-console.log(quantum.estimatedProtectionYears); // 50
-```
-
-#### Python
-
-```python
-quantum = client.security.configure_quantum_security('v_1a2b3c4d5e6f', {
-    'algorithms': ['lattice-based', 'multivariate', 'hash-based'],
-    'keySize': 'maximum',
-    'adaptiveMode': True
-})
-
-print(quantum.quantum_resistance_level)  # "maximum"
-print(quantum.estimated_protection_years)  # 50
-```
-
-### Intent-Based Inheritance
-
-#### JavaScript/TypeScript
-
-```typescript
-const inheritance = await client.inheritance.configure('v_1a2b3c4d5e6f', {
-  beneficiaries: [
-    {
-      address: '0x9876543210abcdef9876543210abcdef98765432',
-      email: 'beneficiary@example.com',
-      allocation: 100,
-      unlockConditions: {
-        timeBasedTrigger: {
-          inactivityPeriod: 31536000 // 1 year in seconds
-        }
-      }
-    }
-  ],
-  verificationRequirements: {
-    requireLegalDocumentation: true,
-    identityVerificationLevel: 'advanced'
-  }
-});
-
-console.log(inheritance.inheritanceId); // "i_7h8j9k0l1m2n"
-console.log(inheritance.status); // "configured"
-```
-
-#### Python
-
-```python
-inheritance = client.inheritance.configure('v_1a2b3c4d5e6f', {
-    'beneficiaries': [
-        {
-            'address': '0x9876543210abcdef9876543210abcdef98765432',
-            'email': 'beneficiary@example.com',
-            'allocation': 100,
-            'unlockConditions': {
-                'timeBasedTrigger': {
-                    'inactivityPeriod': 31536000  # 1 year in seconds
-                }
-            }
-        }
-    ],
-    'verificationRequirements': {
-        'requireLegalDocumentation': True,
-        'identityVerificationLevel': 'advanced'
-    }
-})
-
-print(inheritance.inheritance_id)  # "i_7h8j9k0l1m2n"
-print(inheritance.status)  # "configured"
-```
-
-## Blockchain-Specific API
-
-### Ethereum
-
-#### Get Gas Price
-
-##### JavaScript/TypeScript
-
-```typescript
-const gasPrice = await client.blockchain.ethereum.getGasPrice();
-
-console.log(gasPrice.standard.gwei); // 30
-console.log(gasPrice.fast.estimatedSeconds); // 15
-```
-
-##### Python
-
-```python
-gas_price = client.blockchain.ethereum.get_gas_price()
-
-print(gas_price.standard.gwei)  # 30
-print(gas_price.fast.estimated_seconds)  # 15
-```
-
-### TON
-
-#### Get Account Information
-
-##### JavaScript/TypeScript
-
-```typescript
-const account = await client.blockchain.ton.getAccount('UQAkIXbCToQ6LowMrDNG2K3ERmMH8m4XB2owWgL0BAB14Jtl');
-
-console.log(account.balance); // "10.5"
-console.log(account.status); // "active"
-```
-
-##### Python
-
-```python
-account = client.blockchain.ton.get_account('UQAkIXbCToQ6LowMrDNG2K3ERmMH8m4XB2owWgL0BAB14Jtl')
-
-print(account.balance)  # "10.5"
-print(account.status)  # "active"
-```
-
-### Solana
-
-#### Get Account Information
-
-##### JavaScript/TypeScript
-
-```typescript
-const account = await client.blockchain.solana.getAccount('Fg6PaFpoGXkYsidMpWTK6W2BeZ7FEfcYkg476zPFsLnS');
-
-console.log(account.balance); // "25.75"
-console.log(account.status); // "active"
-```
-
-##### Python
-
-```python
-account = client.blockchain.solana.get_account('Fg6PaFpoGXkYsidMpWTK6W2BeZ7FEfcYkg476zPFsLnS')
-
-print(account.balance)  # "25.75"
-print(account.status)  # "active"
-```
-
-### Bitcoin
-
-#### Get Account Information
-
-##### JavaScript/TypeScript
-
-```typescript
-const account = await client.blockchain.bitcoin.getAccount('bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh');
-
-console.log(account.balance); // "0.25"
-console.log(account.totalReceived); // "1.5"
-```
-
-##### Python
-
-```python
-account = client.blockchain.bitcoin.get_account('bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh')
-
-print(account.balance)  # "0.25"
-print(account.total_received)  # "1.5"
-```
-
-## Real-time Updates with WebSockets
-
-### JavaScript/TypeScript
-
-```typescript
-// Connect to WebSocket
-const socket = client.connectWebSocket();
-
-// Listen for transaction confirmations
-socket.on('TRANSACTION_CONFIRMED', (data) => {
-  console.log(`Transaction ${data.transactionId} confirmed`);
-  console.log(`Block number: ${data.blockNumber}`);
-});
-
-// Listen for security alerts
-socket.on('SECURITY_ALERT', (data) => {
-  console.log(`Security alert: ${data.type}`);
-  console.log(`Severity: ${data.severity}`);
-  console.log(`Description: ${data.description}`);
-});
-
-// Close connection when done
-socket.close();
-```
-
-### Python
-
-```python
-# Define event handlers
-def on_transaction_confirmed(data):
-    print(f"Transaction {data['transactionId']} confirmed")
-    print(f"Block number: {data['blockNumber']}")
-
-def on_security_alert(data):
-    print(f"Security alert: {data['type']}")
-    print(f"Severity: {data['severity']}")
-    print(f"Description: {data['description']}")
-
-# Connect to WebSocket
-socket = client.connect_websocket()
-
-# Register event handlers
-socket.on('TRANSACTION_CONFIRMED', on_transaction_confirmed)
-socket.on('SECURITY_ALERT', on_security_alert)
-
-# Keep connection open (in a real application)
-# import time
-# time.sleep(60)  # Keep connection open for 1 minute
-
-# Close connection when done
-socket.close()
-```
-
-## Webhook Management
-
-### Register a Webhook
-
-#### JavaScript/TypeScript
-
-```typescript
-const webhook = await client.webhooks.create({
-  url: 'https://your-server.com/webhook',
-  events: [
-    'vault.created',
-    'vault.updated',
-    'transaction.confirmed',
-    'security.alert'
-  ],
-  secret: 'your_webhook_secret'
-});
-
-console.log(webhook.webhookId); // "wh_7h8j9k0l1m2n"
-console.log(webhook.status); // "active"
-```
-
-#### Python
-
-```python
-webhook = client.webhooks.create({
-    'url': 'https://your-server.com/webhook',
-    'events': [
-        'vault.created',
-        'vault.updated',
-        'transaction.confirmed',
-        'security.alert'
-    ],
-    'secret': 'your_webhook_secret'
-})
-
-print(webhook.webhook_id)  # "wh_7h8j9k0l1m2n"
-print(webhook.status)  # "active"
-```
-
-### List Webhooks
-
-#### JavaScript/TypeScript
-
-```typescript
-const webhooks = await client.webhooks.list();
-
-webhooks.forEach(webhook => {
-  console.log(webhook.webhookId);
-  console.log(webhook.url);
-  console.log(webhook.events);
-});
-```
-
-#### Python
-
-```python
-webhooks = client.webhooks.list()
-
-for webhook in webhooks:
-    print(webhook.webhook_id)
-    print(webhook.url)
-    print(webhook.events)
-```
-
-### Delete a Webhook
-
-#### JavaScript/TypeScript
-
-```typescript
-const result = await client.webhooks.delete('wh_7h8j9k0l1m2n');
-
-console.log(result.success); // true
-```
-
-#### Python
-
-```python
-result = client.webhooks.delete('wh_7h8j9k0l1m2n')
-
-print(result.success)  # True
+interface ChronosVaultConfig {
+  network: 'mainnet' | 'testnet';
+  apiBaseUrl: string;
+  apiKey?: string;
+  timeout?: number;
+  mode?: 'api' | 'rpc' | 'hybrid';
+  rpc?: {
+    arbitrum?: {
+      rpcUrl: string;
+      privateKey?: string;
+      chainId?: number;
+    };
+    solana?: {
+      rpcUrl: string;
+      privateKey?: string;
+      commitment?: 'processed' | 'confirmed' | 'finalized';
+    };
+    ton?: {
+      endpoint: string;
+      apiKey?: string;
+      mnemonic?: string;
+      network?: 'mainnet' | 'testnet';
+    };
+  };
+}
 ```
 
 ## Error Handling
 
-### JavaScript/TypeScript
-
 ```typescript
+import { SDKError, ProviderError, ConsensusError } from '@chronos-vault/sdk';
+
 try {
-  const vault = await client.vaults.get('non_existent_vault_id');
+  await sdk.trinity.submitConsensusOperation({ ... });
 } catch (error) {
-  if (error.code === 'RESOURCE_NOT_FOUND') {
-    console.error('Vault not found');
-  } else if (error.code === 'AUTHENTICATION_REQUIRED') {
-    console.error('Authentication required');
-  } else {
-    console.error(`Error: ${error.message}`);
+  if (error instanceof ConsensusError) {
+    console.log('Consensus failed:', error.confirmations, 'of 2 required');
+  } else if (error instanceof ProviderError) {
+    console.log('Chain error on:', error.chain);
+  } else if (error instanceof SDKError) {
+    console.log('SDK error:', error.code, error.message);
   }
-  console.log(`Request ID: ${error.requestId}`);
 }
 ```
 
-### Python
+## The 8 Mathematical Defense Layers
 
-```python
-try:
-    vault = client.vaults.get('non_existent_vault_id')
-except ChronosVaultException as error:
-    if error.code == 'RESOURCE_NOT_FOUND':
-        print('Vault not found')
-    elif error.code == 'AUTHENTICATION_REQUIRED':
-        print('Authentication required')
-    else:
-        print(f'Error: {error.message}')
-    print(f'Request ID: {error.request_id}')
-```
+Trinity Protocol implements 8 cryptographic security layers:
 
-## Best Practices
+1. **Zero-Knowledge Proof Engine** - Groth16 ZK-SNARKs
+2. **Formal Verification Pipeline** - Lean 4 theorem proofs
+3. **Multi-Party Computation** - Shamir + CRYSTALS-Kyber
+4. **Verifiable Delay Functions** - Wesolowski VDF time-locks
+5. **AI + Cryptographic Governance** - Anomaly detection
+6. **Quantum-Resistant Cryptography** - ML-KEM-1024, Dilithium-5
+7. **Trinity Protocol Consensus** - 2-of-3 multi-chain
+8. **Trinity Shield TEE** - Intel SGX/AMD SEV enclaves
 
-1. **API Key Security**: Store API keys securely using environment variables or a secure key management service.
+## Resources
 
-2. **Error Handling**: Always implement proper error handling to gracefully manage API failures.
+- Website: https://chronosvault.org
+- Documentation: https://docs.chronosvault.org
+- GitHub: https://github.com/Chronos-Vault
+- SDK Repository: https://github.com/Chronos-Vault/chronos-vault-sdk
+- Security Proofs: https://github.com/Chronos-Vault/chronos-vault-security
 
-3. **Pagination**: When listing resources, utilize pagination parameters to avoid fetching excessive data.
+## License
 
-4. **Retry Logic**: Implement retry logic for transient failures, with exponential backoff.
-
-5. **Connection Pooling**: For high-throughput applications, use connection pooling to optimize performance.
-
-6. **Webhook Verification**: Verify webhook signatures to ensure requests are legitimate.
-
-7. **Rate Limiting**: Respect rate limits by monitoring the rate limit headers and implementing throttling when necessary.
-
-## SDK Versioning
-
-The SDK follows semantic versioning (MAJOR.MINOR.PATCH).
-
-- **MAJOR** version increments indicate incompatible API changes
-- **MINOR** version increments add functionality in a backward-compatible manner
-- **PATCH** version increments make backward-compatible bug fixes
-
-## Support
-
-For SDK support, please contact us at sdk-support@chronosvault.org or visit our [developer forum](https://developers.chronosvault.org).
+MIT License
