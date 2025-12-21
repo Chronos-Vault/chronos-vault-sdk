@@ -464,8 +464,8 @@ const status = await sdk.bridge.getTransferStatus(transferId);
 
 | Resource | Link |
 |----------|------|
-| SDK Docs | [https://docs.chronosvault.org](https://github.com/Chronos-Vault/chronos-vault-sdk/blob/main/docs/SDK_USAGE.md) |
-| API Docs | [https://docs.chronosvault.org/api](https://chronosvault.org/api-documentation) |
+| SDK Docs | https://docs.chronosvault.org |
+| API Docs | https://docs.chronosvault.org/api |
 | GitHub | https://github.com/Chronos-Vault |
 | Security Proofs | https://github.com/Chronos-Vault/chronos-vault-security |
 | Website | https://chronosvault.org |
