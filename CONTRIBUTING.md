@@ -170,13 +170,13 @@ Include:
 
 ## Security
 
-For security vulnerabilities, please email security@chronosvault.org instead of opening a public issue.
+For security vulnerabilities, please email chronosvault@chronosvault.org instead of opening a public issue.
 
 ## Questions?
 
 - Open a GitHub Discussion
 - Check existing issues
-- Read the documentation at https://docs.chronosvault.org
+- Read the documentation at [https://docs.chronosvault.org](https://chronosvault.org/developer-portal)
 
 ## License
 
